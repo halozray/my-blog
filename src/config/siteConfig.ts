@@ -115,10 +115,11 @@ export const siteConfig: SiteConfig = {
 		// 2. 本地图片（public目录，不优化）: { type: "image", value: "/assets/images/logo.webp", alt: "Logo" }
 		// 3. 本地图片（src目录，自动优化但会增加构建时间，推荐）: { type: "image", value: "assets/images/logo.webp", alt: "Logo" }
 		// 4. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Logo" }
+		// 导航栏 Logo：用站长头像（圆形显示），原黑猫 logo.png 不再引用
 		logo: {
 			type: "image",
-			value: "assets/images/logo.png",
-			alt: "logo",
+			value: "/assets/images/aut-master.webp",
+			alt: "zhz",
 		},
 		// 导航栏标题
 		title: "Alexander",
