@@ -782,6 +782,24 @@ export type FriendsPageConfig = {
 	chat?: FriendChatMessage[]; // 对话气泡文案，滚动到该区域时逐个弹出并打字机显示
 };
 
+// 歌单来源：每条在播放器列表面板顶部生成一个切换标签
+export type MusicPlaylistSource = {
+	// 切换标签上显示的名字
+	label: string;
+
+	// true = 用 local.playlist 本地曲目；false/省略 = 走 Meting 接口拉在线歌单
+	local?: boolean;
+
+	// 取址后端：省略/meting = 走 Meting 解析链；self = 走本站 /api/music/*（QQ 用）
+	api?: "meting" | "self";
+
+	// 音乐平台：netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
+	server?: "netease" | "tencent" | "kugou" | "xiami" | "baidu";
+
+	// 在线歌单 ID（local 来源不需要）
+	id?: string;
+};
+
 // 音乐播放器配置
 export type MusicPlayerConfig = {
 	// 使用方式：'meting' 或 'local'
@@ -816,6 +834,10 @@ export type MusicPlayerConfig = {
 		// 备用 API 配置（当主 API 失败时使用）
 		fallbackApis?: string[];
 	};
+
+	// 歌单列表：配置后列表面板顶部出现歌单切换标签，首项为默认歌单。
+	// 未配置时退回 mode + meting.id 的单歌单旧行为
+	playlists?: MusicPlaylistSource[];
 
 	// 本地音乐配置（当 mode 为 'local' 时使用）
 	local?: {

@@ -223,6 +223,35 @@
 	overscroll-behavior: contain;
 	padding: 0.5rem;
 }
+/* 歌单来源标签：列表视图改纵向排布，标签行固定在上、列表吃剩余高度 */
+.music-player__playlist-view {
+	display: flex;
+	flex-direction: column;
+}
+.music-player__playlist-view .music-player__playlist-list {
+	height: auto;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+.music-player__source-tabs {
+	display: flex;
+	flex-shrink: 0;
+	gap: 0.25rem;
+	padding: 0.25rem 0.5rem 0;
+	overflow-x: auto;
+	overscroll-behavior: contain;
+	border-bottom: 1px solid var(--line-divider);
+}
+.music-player__source-tabs[hidden] {
+	display: none;
+}
+/* 外观沿用 .music-player__tab，这里只收一点尺寸，容纳多个歌单名 */
+.music-player__source-tab {
+	flex-shrink: 0;
+	padding: 0.25rem 0.5rem 0.375rem;
+	font-size: 0.75rem;
+	white-space: nowrap;
+}
 .music-player__playlist-list.is-entering .music-player__track {
 	animation: music-player-track-in 340ms var(--mp-motion) backwards;
 	animation-delay: calc(var(--mp-i, 0) * 26ms);

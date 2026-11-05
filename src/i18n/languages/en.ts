@@ -60,6 +60,7 @@ export const en: Translation = {
 	[Key.musicLoadingLyrics]: "Loading lyrics...",
 	[Key.musicFailedLyrics]: "Failed to load lyrics",
 	[Key.musicNoSongs]: "No songs",
+	[Key.musicLoadingPlaylist]: "Loading playlist...",
 	[Key.musicError]: "Player Error",
 	[Key.musicPlay]: "Play",
 	[Key.musicPause]: "Pause",

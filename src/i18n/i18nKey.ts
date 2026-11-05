@@ -59,6 +59,7 @@ enum I18nKey {
 	musicLoadingLyrics = "musicLoadingLyrics",
 	musicFailedLyrics = "musicFailedLyrics",
 	musicNoSongs = "musicNoSongs",
+	musicLoadingPlaylist = "musicLoadingPlaylist",
 	musicError = "musicError",
 	musicPlay = "musicPlay",
 	musicPause = "musicPause",

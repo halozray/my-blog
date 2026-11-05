@@ -6,32 +6,39 @@ import { url } from "@/utils/url-utils";
 
 const config = musicPlayerConfig;
 
-const localPlaylist =
-	config.mode === "local" && config.local?.playlist
-		? config.local.playlist.map((song) => {
-				const isFullUrl = (path: string) => /^https?:\/\//.test(path);
-				return {
-					name: song.name,
-					artist: song.artist,
-					url: isFullUrl(song.url) ? song.url : url(song.url),
-					pic: song.cover
-						? isFullUrl(song.cover)
-							? song.cover
-							: url(song.cover)
-						: undefined,
-					lrc: song.lrc
-						? isFullUrl(song.lrc)
-							? song.lrc
-							: url(song.lrc)
-						: undefined,
-				};
-			})
-		: [];
+const isFullUrl = (path: string) => /^https?:\/\//.test(path);
+
+// 本地曲目：本地歌单来源与旧的 local 模式共用这份解析结果
+const localPlaylist = (config.local?.playlist ?? []).map((song) => ({
+	name: song.name,
+	artist: song.artist,
+	url: isFullUrl(song.url) ? song.url : url(song.url),
+	pic: song.cover
+		? isFullUrl(song.cover)
+			? song.cover
+			: url(song.cover)
+		: undefined,
+	lrc: song.lrc
+		? isFullUrl(song.lrc)
+			? song.lrc
+			: url(song.lrc)
+		: undefined,
+}));
+
+// 歌单来源：配置了 playlists 才有切换标签；未配置时保持旧的单歌单行为
+const playlistSources = (config.playlists ?? []).map((source) => ({
+	label: source.label,
+	local: source.local === true,
+	api: source.api === "self" ? "self" : "meting",
+	server: source.server ?? config.meting?.server ?? "netease",
+	id: source.id ?? "",
+}));
 
 const managerConfigStr = JSON.stringify({
 	mode: config.mode,
 	meting: config.meting,
 	localPlaylist: localPlaylist,
+	sources: playlistSources,
 	volume: config.volume ?? 0.7,
 	playMode: config.playMode ?? "list",
 	i18n: {
@@ -89,6 +96,13 @@ const managerConfigStr = JSON.stringify({
     var state = {
         playlist: [],
         currentIndex: 0,
+        // 歌单来源（切换标签）：sources 为名字列表，activeSource 为当前查看的歌单
+        sources: [],
+        activeSource: 0,
+        // 正在播放的曲目，切歌单时用来判断它是否还在新列表里
+        nowPlaying: null,
+        // 面板当前展示的列表（与播放队列 state.playlist 分离）
+        viewTracks: [],
         isPlaying: false,
         playMode: 0, // 0: list, 1: one, 2: random
         volume: localStorage.getItem('music-player-volume') !== null
@@ -114,8 +128,12 @@ const managerConfigStr = JSON.stringify({
     }
 
     // ── Meting fetch ─────────────────────────────────────────
-    async function fetchMetingData() {
-        if (!config.meting) return;
+    /**
+     * 按平台/类型/ID 拉一份歌单，主 API 失败再逐个 fallback。
+     * 返回归一化后的曲目数组；全链失败时抛出。
+     */
+    async function fetchMetingTracks(server, type, id) {
+        if (!config.meting) return [];
         var m = config.meting;
         var apis = [m.api].concat(m.fallbackApis || []);
 
@@ -124,9 +142,9 @@ const managerConfigStr = JSON.stringify({
             if (!baseApi) continue;
             try {
                 var fetchUrl = baseApi
-                    .replace(':server', m.server)
-                    .replace(':type', m.type)
-                    .replace(':id', m.id)
+                    .replace(':server', server || m.server)
+                    .replace(':type', type || m.type)
+                    .replace(':id', encodeURIComponent(id || ''))
                     .replace(':r', Math.random());
                 if (m.auth) fetchUrl += '&auth=' + m.auth;
 
@@ -135,22 +153,96 @@ const managerConfigStr = JSON.stringify({
                 var data = await res.json();
 
                 if (Array.isArray(data) && data.length > 0) {
-                    state.playlist = data.map(function (item) {
+                    return data.map(function (item) {
                         return {
-                            name: item.title || item.name || 'Unknown',
-                            artist: item.author || item.artist || 'Unknown',
+                            name: item.name || item.title || 'Unknown',
+                            artist: item.artist || item.author || 'Unknown',
                             url: item.url,
                             pic: item.pic || item.cover || '',
                             lrc: item.lrc
                         };
                     });
-                    return;
                 }
             } catch (e) {
                 console.warn('Meting API failed for ' + baseApi, e);
             }
         }
         throw new Error('All Meting APIs failed');
+    }
+
+    // 平台名 → 自建接口的 platform 代码
+    var SELF_PLATFORM = { netease: 'wy', tencent: 'tx', kugou: 'kg' };
+
+    /**
+     * 走本站自建接口 /api/music/playlist 拉歌单（QQ 用）。
+     * 只拿 id/歌名/歌手/封面，直链在点播时再走 /api/music/resolve；
+     * 歌词仍借 Meting 的 lrc 端点（实测 QQ 曲目的歌词可取）。
+     */
+    async function fetchSelfPlaylist(server, id) {
+        var platform = SELF_PLATFORM[server] || server;
+        var res = await fetch(
+            '/api/music/playlist?platform=' + encodeURIComponent(platform)
+                + '&id=' + encodeURIComponent(id)
+        );
+        var data = await res.json().catch(function () { return null; });
+        if (!res.ok || !data || !Array.isArray(data.tracks) || data.tracks.length === 0) {
+            throw new Error((data && data.error) || ('HTTP ' + res.status));
+        }
+        var lrcTpl = config.meting ? config.meting.api : '';
+        return data.tracks.map(function (t) {
+            return {
+                name: t.name || 'Unknown',
+                artist: t.artist || 'Unknown',
+                // 直链留空，点播时解析
+                url: '',
+                pic: t.pic || '',
+                lrc: lrcTpl
+                    ? lrcTpl
+                        .replace(':server', server)
+                        .replace(':type', 'lrc')
+                        .replace(':id', encodeURIComponent(t.id))
+                        .replace(':r', String(Math.random()))
+                    : undefined,
+                // 供 resolveTrackUrl 使用
+                self: { platform: platform, id: t.id, name: t.name || '', singer: t.artist || '' }
+            };
+        });
+    }
+
+    /** 点播时用 /api/music/resolve 取直链；失败抛出，由调用方提示 */
+    async function resolveTrackUrl(track) {
+        var s = track.self;
+        var res = await fetch(
+            '/api/music/resolve?platform=' + encodeURIComponent(s.platform)
+                + '&id=' + encodeURIComponent(s.id)
+                + '&name=' + encodeURIComponent(s.name || '')
+                + '&singer=' + encodeURIComponent(s.singer || '')
+                + '&quality=320k'
+        );
+        var data = await res.json().catch(function () { return null; });
+        if (!res.ok || !data || !data.url) {
+            throw new Error((data && data.error) || ('HTTP ' + res.status));
+        }
+        return data.url;
+    }
+
+    /** 取第 index 个歌单来源的曲目：本地直接返回，在线走对应解析链，结果进会话缓存 */
+    async function fetchSourceTracks(index) {
+        var src = state.sources[index];
+        if (!src) return [];
+        if (Object.prototype.hasOwnProperty.call(sourceCache, index)) {
+            return sourceCache[index];
+        }
+        var tracks;
+        if (src.local) {
+            tracks = config.localPlaylist || [];
+        } else if (src.api === 'self') {
+            tracks = await fetchSelfPlaylist(src.server, src.id);
+        } else {
+            tracks = await fetchMetingTracks(src.server, 'playlist', src.id);
+        }
+        sourceCache[index] = tracks;
+        return tracks;
     }
 
     // ── Lyrics ───────────────────────────────────────────────
@@ -192,17 +284,7 @@ const managerConfigStr = JSON.stringify({
     }
 
     // ── Track loading ────────────────────────────────────────
-    function loadTrack(index, autoPlay) {
-        if (index < 0 || index >= state.playlist.length) return;
-        state.currentIndex = index;
-        var track = state.playlist[index];
-
-        audio.src = track.url;
-
-        loadLyrics(track);
-
-        emit('fm:track', { index: index, track: track, autoPlay: !!autoPlay });
-
+    function startPlayback(autoPlay) {
         if (autoPlay) {
             audio.play().then(function () {
                 state.isPlaying = true;
@@ -214,6 +296,41 @@ const managerConfigStr = JSON.stringify({
             state.isPlaying = false;
             emit('fm:play-state', { isPlaying: false });
         }
+    }
+
+    function loadTrack(index, autoPlay) {
+        if (index < 0 || index >= state.playlist.length) return;
+        state.currentIndex = index;
+        var track = state.playlist[index];
+        state.nowPlaying = track;
+
+        loadLyrics(track);
+
+        emit('fm:track', { index: index, track: track, autoPlay: !!autoPlay });
+
+        if (track.url) {
+            audio.src = track.url;
+            startPlayback(autoPlay);
+            return;
+        }
+
+        if (track.self) {
+            // 自建歌单只带 id，直链到点播才解析；不持久化，直链有有效期
+            resolveTrackUrl(track).then(function (directUrl) {
+                // 解析回来时用户可能已切歌，别把源抢回旧曲目
+                if (state.nowPlaying !== track) return;
+                audio.src = directUrl;
+                startPlayback(autoPlay);
+            }).catch(function (e) {
+                console.warn('Resolve failed:', e);
+                state.isPlaying = false;
+                emit('fm:play-state', { isPlaying: false });
+                emit('fm:error', { message: config.i18n.error });
+            });
+            return;
+        }
+
+        startPlayback(autoPlay);
     }
 
     // ── Playback controls ────────────────────────────────────
@@ -298,6 +415,18 @@ const managerConfigStr = JSON.stringify({
         }
     }
 
+    /**
+     * 点列表里的某一首：这是用户主动点歌，此时才把播放队列换成当前展示的歌单。
+     * （切换歌单标签本身不动队列，见 setSource）
+     */
+    function playViewTrack(index) {
+        if (index < 0 || index >= state.viewTracks.length) return;
+        if (state.playlist !== state.viewTracks) {
+            state.playlist = state.viewTracks;
+        }
+        playTrackByIndex(index);
+    }
+
     // ── Audio events → broadcast ─────────────────────────────
     audio.addEventListener('timeupdate', function () {
         if (isNaN(audio.duration)) return;
@@ -336,16 +465,84 @@ const managerConfigStr = JSON.stringify({
         emit('fm:error', { message: state.error });
     });
 
+    // ── 歌单来源（切换标签） ──────────────────────────────────
+    var rawSources = Array.isArray(config.sources) ? config.sources : [];
+    // 已加载歌单的会话内缓存：重复点选不再请求
+    var sourceCache = {};
+
+    function sourceMeta() {
+        return rawSources.map(function (src) { return { label: src.label }; });
+    }
+
+    function initSources() {
+        state.sources = rawSources;
+        state.activeSource = 0;
+    }
+
+    /** 正在播放的曲目落在给定列表里的下标，找不到返回 -1 */
+    function indexOfNowPlaying(tracks) {
+        var now = state.nowPlaying;
+        if (!now) return -1;
+        for (var i = 0; i < tracks.length; i++) {
+            if (tracks[i].name === now.name && tracks[i].artist === now.artist) return i;
+        }
+        return -1;
+    }
+
+    /**
+     * 切换当前查看的歌单。只换面板展示的列表，不碰播放队列与 audio：
+     * 正在播放的曲目继续播、播放队列保持，直到用户在新歌单里主动点歌才换队列。
+     */
+    async function setSource(index) {
+        if (!state.sources.length) return;
+        if (index < 0 || index >= state.sources.length) return;
+        if (index === state.activeSource) return;
+
+        state.activeSource = index;
+        emit('fm:sources', {
+            sources: sourceMeta(),
+            activeIndex: index
+        });
+
+        var cached = Object.prototype.hasOwnProperty.call(sourceCache, index);
+        if (!cached) emit('fm:playlist-loading', { label: sourceMeta()[index] ? sourceMeta()[index].label : '' });
+
+        var tracks = [];
+        try {
+            tracks = await fetchSourceTracks(index);
+        } catch (e) {
+            console.warn('Playlist source load failed:', e);
+            emit('fm:error', { message: config.i18n.error });
+        }
+
+        state.viewTracks = tracks;
+        emit('fm:playlist', {
+            playlist: tracks,
+            currentIndex: indexOfNowPlaying(tracks)
+        });
+    }
+
     // ── Init (idempotent) ────────────────────────────────────
     async function init() {
         if (state.initialized || state.initializing) return;
         state.initializing = true;
 
         try {
-            if (config.mode === 'meting' && config.meting) {
-                await fetchMetingData();
+            initSources();
+
+            if (state.sources.length > 0) {
+                var defaultTracks = await fetchSourceTracks(state.activeSource);
+                state.playlist = defaultTracks;
+                state.viewTracks = defaultTracks;
+            } else if (config.mode === 'meting' && config.meting) {
+                state.playlist = await fetchMetingTracks(
+                    config.meting.server,
+                    config.meting.type,
+                    config.meting.id
+                );
             } else if (config.mode === 'local') {
                 state.playlist = config.localPlaylist || [];
+                state.viewTracks = state.playlist;
             }
 
             if (state.playlist.length > 0) {
@@ -361,6 +558,8 @@ const managerConfigStr = JSON.stringify({
 
                 emit('fm:init', {
                     playlist: state.playlist,
+                    sources: sourceMeta(),
+                    activeSource: state.activeSource,
                     playMode: state.playMode,
                     volume: state.volume,
                     isMuted: state.isMuted
@@ -371,6 +570,8 @@ const managerConfigStr = JSON.stringify({
                 state.initialized = true;
                 emit('fm:init', {
                     playlist: [],
+                    sources: sourceMeta(),
+                    activeSource: state.activeSource,
                     playMode: state.playMode,
                     volume: state.volume,
                     isMuted: state.isMuted
@@ -382,6 +583,8 @@ const managerConfigStr = JSON.stringify({
             state.initialized = true;
             emit('fm:init', {
                 playlist: [],
+                sources: sourceMeta(),
+                activeSource: state.activeSource,
                 playMode: state.playMode,
                 volume: state.volume,
                 isMuted: state.isMuted
@@ -396,10 +599,13 @@ const managerConfigStr = JSON.stringify({
     window.__fireflyMusic = {
         init: init,
         getState: function () {
-            var track = state.playlist[state.currentIndex] || null;
+            var track = state.nowPlaying || state.playlist[state.currentIndex] || null;
             return {
                 playlist: state.playlist,
+                viewTracks: state.viewTracks,
                 currentIndex: state.currentIndex,
+                sources: sourceMeta(),
+                activeSource: state.activeSource,
                 track: track,
                 isPlaying: state.isPlaying,
                 playMode: state.playMode,
@@ -426,7 +632,9 @@ const managerConfigStr = JSON.stringify({
         seek: seek,
         seekToTime: seekToTime,
         playTrackByIndex: playTrackByIndex,
+        playViewTrack: playViewTrack,
         loadTrack: loadTrack,
+        setSource: setSource,
         // Re-sync all MusicPlayer widgets (called after Swup page transitions)
         resync: function () {
             if (!state.initialized) return;

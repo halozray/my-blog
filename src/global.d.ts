@@ -59,6 +59,18 @@ declare global {
 					lrc?: string;
 				}>;
 				currentIndex: number;
+				/** 歌单来源（切换标签），旧单歌单配置下为空数组 */
+				sources: Array<{ label: string }>;
+				/** 当前查看的歌单来源下标 */
+				activeSource: number;
+				/** 面板当前展示的列表，可与播放队列不同 */
+				viewTracks: Array<{
+					name: string;
+					artist: string;
+					url: string;
+					pic: string;
+					lrc?: string;
+				}>;
 				track: {
 					name: string;
 					artist: string;
@@ -90,7 +102,11 @@ declare global {
 			seek: (percent: number) => void;
 			seekToTime: (time: number) => void;
 			playTrackByIndex: (index: number) => void;
+			/** 点列表条目：播放队列换成当前展示的歌单再播这一首 */
+			playViewTrack: (index: number) => void;
 			loadTrack: (index: number, autoPlay: boolean) => void;
+			/** 切换当前查看的歌单来源，不打断正在播放的曲目、也不换播放队列 */
+			setSource: (index: number) => Promise<void>;
 		};
 	}
 

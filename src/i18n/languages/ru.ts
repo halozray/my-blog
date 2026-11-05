@@ -60,6 +60,7 @@ export const ru: Translation = {
 	[Key.musicLoadingLyrics]: "Загрузка текста песни...",
 	[Key.musicFailedLyrics]: "Ошибка загрузки текста песни",
 	[Key.musicNoSongs]: "Нет песен",
+	[Key.musicLoadingPlaylist]: "Загрузка плейлиста...",
 	[Key.musicError]: "Ошибка плеера",
 	[Key.musicPlay]: "Воспроизвести",
 	[Key.musicPause]: "Пауза",

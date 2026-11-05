@@ -143,6 +143,7 @@ export function setupMusicPlayerWidget(): void {
 		volumeTrack: $(".music-player__volume-track"),
 		volumeBubble: $(".music-player__volume-bubble"),
 		playlistList: $(".music-player__playlist-list"),
+		sourceTabs: $(".music-player__source-tabs"),
 		tabIndicator: $(".music-player__tab-indicator"),
 		tabPlaylist: $(".music-player__tab--playlist"),
 		tabLyrics: $(".music-player__tab--lyrics"),
@@ -401,8 +402,10 @@ export function setupMusicPlayerWidget(): void {
 	// ── 展开卡面板（歌单 / 歌词双 tab） ───────────────────────
 	function moveTabIndicator(): void {
 		const indicator = ui.tabIndicator;
+		// 只在「列表/歌词」这一行里找活跃项：歌单来源标签同样复用
+		// .music-player__tab，不加限定会选到另一行上去
 		const active = root.querySelector<HTMLElement>(
-			".music-player__tab.is-active",
+			".music-player__panel-tabs .music-player__tab.is-active",
 		);
 		if (!indicator || !active) return;
 		indicator.style.width = `${active.offsetWidth}px`;
@@ -627,7 +630,8 @@ export function setupMusicPlayerWidget(): void {
 			itemEl.addEventListener(
 				"click",
 				() => {
-					mgr.playTrackByIndex(
+					// 点列表条目 = 用户主动点歌，此时才换播放队列（见 playViewTrack）
+					mgr.playViewTrack(
 						Number.parseInt(itemEl.dataset.index ?? "0", 10),
 					);
 				},
@@ -757,6 +761,61 @@ export function setupMusicPlayerWidget(): void {
 		}, LYRICS_SCROLL_RESUME_DELAY);
 	}
 
+	// ── 歌单来源切换标签 ─────────────────────────────────────
+	/**
+	 * 渲染列表面板顶部的歌单切换标签。
+	 * 只有一条来源时不显示（旧单歌单配置不受影响）。
+	 */
+	function renderSourceTabs(
+		sources: Array<{ label: string }>,
+		activeIndex: number,
+	): void {
+		const tabs = ui.sourceTabs;
+		if (!tabs) return;
+		if (sources.length <= 1) {
+			tabs.innerHTML = "";
+			tabs.hidden = true;
+			return;
+		}
+		tabs.hidden = false;
+		tabs.innerHTML = "";
+		sources.forEach((source, index) => {
+			const button = document.createElement("button");
+			button.type = "button";
+			button.className = "music-player__tab music-player__source-tab";
+			button.setAttribute("role", "tab");
+			button.setAttribute("aria-selected", index === activeIndex ? "true" : "false");
+			button.classList.toggle("is-active", index === activeIndex);
+			button.textContent = source.label;
+			button.addEventListener(
+				"click",
+				() => {
+					// 还没初始化过就先拉起来，拉完再落到用户点的这一条
+					if (!mgr.getState().initialized) {
+						void mgr.init().then(() => mgr.setSource(index));
+						return;
+					}
+					void mgr.setSource(index);
+				},
+				{ signal },
+			);
+			tabs.appendChild(button);
+		});
+	}
+
+	/** 懒加载期间在列表区显示占位提示（沿用歌词占位的样式） */
+	function showPlaylistPlaceholder(text: string): void {
+		const list = ui.playlistList;
+		if (!list) return;
+		playlistData = [];
+		playlistRenderedCount = 0;
+		list.innerHTML = "";
+		const placeholder = document.createElement("div");
+		placeholder.className = "music-player__lyrics-placeholder";
+		placeholder.textContent = text;
+		list.appendChild(placeholder);
+	}
+
 	// ── 全量同步（late-mount / Swup 导航后 resync） ───────────
 	function syncAll(): void {
 		const s = mgr.getState();
@@ -768,7 +827,16 @@ export function setupMusicPlayerWidget(): void {
 			updatePillText();
 			return;
 		}
-		renderPlaylist(s.playlist as TrackInfo[], s.currentIndex);
+		// 面板展示的是当前查看的歌单（viewTracks），高亮只看正在播的歌是否在其中
+		const view = (s.viewTracks.length > 0 ? s.viewTracks : s.playlist) as TrackInfo[];
+		const playing = s.track;
+		const viewHighlight = playing
+			? view.findIndex(
+					(t) => t.name === playing.name && t.artist === playing.artist,
+				)
+			: -1;
+		renderPlaylist(view, viewHighlight);
+		renderSourceTabs(s.sources, s.activeSource);
 		updateTrackUI((s.track as TrackInfo | null) ?? null);
 		applyPlayState(s.isPlaying);
 		updateModeUI(s.playMode);
@@ -794,11 +862,14 @@ export function setupMusicPlayerWidget(): void {
 
 	on<{
 		playlist: TrackInfo[];
+		sources?: Array<{ label: string }>;
+		activeSource?: number;
 		playMode: number;
 		volume: number;
 		isMuted: boolean;
 	}>("fm:init", (d) => {
 		setLoading(false);
+		if (d.sources) renderSourceTabs(d.sources, d.activeSource ?? 0);
 		if (d.playlist.length > 0) {
 			renderPlaylist(d.playlist, 0);
 			updateModeUI(d.playMode);
@@ -806,6 +877,22 @@ export function setupMusicPlayerWidget(): void {
 		} else if (ui.title) {
 			ui.title.textContent = i18n(I18nKey.musicNoSongs);
 		}
+	});
+
+	on<{ sources: Array<{ label: string }>; activeIndex: number }>(
+		"fm:sources",
+		(d) => {
+			renderSourceTabs(d.sources, d.activeIndex);
+		},
+	);
+
+	on<{ label: string }>("fm:playlist-loading", () => {
+		showPlaylistPlaceholder(i18n(I18nKey.musicLoadingPlaylist));
+	});
+
+	on<{ playlist: TrackInfo[]; currentIndex: number }>("fm:playlist", (d) => {
+		renderPlaylist(d.playlist, d.currentIndex);
+		if (d.playlist.length > 0 && panelOpen) playTrackEntrance();
 	});
 
 	on<{ index: number; track: TrackInfo }>("fm:track", (d) => {

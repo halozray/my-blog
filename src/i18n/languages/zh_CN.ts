@@ -60,6 +60,7 @@ export const zh_CN: Translation = {
 	[Key.musicLoadingLyrics]: "正在加载歌词...",
 	[Key.musicFailedLyrics]: "歌词加载失败",
 	[Key.musicNoSongs]: "暂无歌曲",
+	[Key.musicLoadingPlaylist]: "正在加载歌单...",
 	[Key.musicError]: "播放器错误",
 	[Key.musicPlay]: "播放",
 	[Key.musicPause]: "暂停",
