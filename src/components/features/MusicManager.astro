@@ -500,8 +500,11 @@ const managerConfigStr = JSON.stringify({
             activeIndex: index
         });
 
+        // 切换歌单时保留当前列表，等新数据到位后由 renderPlaylist 整体替换；
+        // 只有列表本来就是空的（首次加载 / 上次失败）才退回占位提示。
+        // 原先无论有无内容都清空成一行「正在加载歌单…」，切换瞬间整块列表塌陷。
         var cached = Object.prototype.hasOwnProperty.call(sourceCache, index);
-        if (!cached) emit('fm:playlist-loading', { label: sourceMeta()[index] ? sourceMeta()[index].label : '' });
+        if (!cached && state.viewTracks.length === 0) emit('fm:playlist-loading', { label: sourceMeta()[index] ? sourceMeta()[index].label : '' });
 
         var tracks = [];
         try {
