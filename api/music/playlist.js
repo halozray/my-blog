@@ -3,7 +3,9 @@
 // GET /api/music/playlist?platform=wy|tx|kg&id=<歌单ID>
 //
 // 迁到 Vercel Edge：仅去掉 Cloudflare 的 caches.default / context.waitUntil，
-// 缓存改由 Cache-Control 响应头承担（playlist 原 max-age=600 保留）。
+// 缓存改由 Cache-Control 响应头承担。2026-11-05 起改成分层缓存：浏览器 600 秒，
+// CDN 存 1 天，过期后 stale-while-revalidate 先把旧歌单递出去、后台再刷新——
+// 原先只有 max-age=600，CDN 一到 10 分钟就整段冷启，用户干等十几秒。
 export const config = { runtime: "edge" };
 
 // 防白嫖：只放行本站、本地调试与本站 Vercel 预览部署
@@ -56,16 +58,24 @@ async function playlistNetease(id) {
 		.filter((x) => x && x !== "undefined");
 	const orderedIds = ids.length ? ids : [...byId.keys()];
 	const missing = orderedIds.filter((x) => !byId.has(x));
+	const batches = [];
 	for (let i = 0; i < missing.length; i += 100) {
-		const batch = missing.slice(i, i + 100);
-		const c = encodeURIComponent(
-			JSON.stringify(batch.map((x) => ({ id: Number(x) || x }))),
-		);
-		const t2 = await fetchText(
-			`https://music.163.com/api/v3/song/detail?c=${c}`,
-			{ Referer: "https://music.163.com/" },
-		);
-		const d2 = JSON.parse(t2);
+		batches.push(missing.slice(i, i + 100));
+	}
+	// 批次之间并发（2026-11-05）：原来是串行 await，328 首要在 iad1 节点上排 4 次
+	// 跨国往返，冷启实测 14–24 秒；并发后只承担最慢那批的延迟。
+	// 任一上游失败仍整体抛出（与改造前一致，不静默返回残单）。
+	const details = await Promise.all(
+		batches.map((batch) => {
+			const c = encodeURIComponent(
+				JSON.stringify(batch.map((x) => ({ id: Number(x) || x }))),
+			);
+			return fetchText(`https://music.163.com/api/v3/song/detail?c=${c}`, {
+				Referer: "https://music.163.com/",
+			}).then((text) => JSON.parse(text));
+		}),
+	);
+	for (const d2 of details) {
 		for (const song of d2?.songs || []) byId.set(String(song.id), song);
 	}
 	const tracks = orderedIds
@@ -151,7 +161,8 @@ export default async function handler(request) {
 		const data = await handlers[platform](id);
 		data.tracks = data.tracks.map((t) => ({ ...t, pic: httpsPic(t.pic) }));
 		return json({ platform, ...data }, 200, {
-			"Cache-Control": "public, max-age=600",
+			"Cache-Control":
+				"public, max-age=600, s-maxage=86400, stale-while-revalidate=604800",
 		});
 	} catch (e) {
 		return json({ error: String(e?.message || e) }, 502);
