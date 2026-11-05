@@ -33,7 +33,7 @@ const personalSites: PersonalSite[] = [
 		icon: "https://www.lanerc.me/favicon/zhz.jpg",
 	},
 	{
-		name: "实验站",
+		name: "灵感屋",
 		url: "https://idea.lanerc.me/",
 		icon: "/assets/images/logo.png",
 	},

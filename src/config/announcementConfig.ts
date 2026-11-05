@@ -10,7 +10,7 @@ export const announcementConfig: AnnouncementConfig = {
 			tag: "欢迎",
 			title: "小站开张",
 			content:
-				"欢迎来到我的实验站，我是 Alexander，白天上课，晚上折腾。这里专门试新主题和新功能，稳了再搬回主站，所以样式随时会变，偶尔抽风，先说声抱歉。",
+				"欢迎来到灵感屋，我是 Alexander，白天上课，晚上折腾。这里专门试新主题和新功能，稳了再搬回主站，所以样式随时会变，偶尔抽风，先说声抱歉。",
 			time: "2026-11-05",
 			link: "/about/",
 			sort: 3,
