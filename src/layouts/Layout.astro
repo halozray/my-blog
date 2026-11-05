@@ -82,12 +82,25 @@ if (title === siteConfig.title) {
 // 封面 → 站点默认图。OG 卡片图必须排在封面之前：封面经 Astro 图片服务转成 WebP，而 QQ /
 // 微信等国内抓取器对 WebP 渲染不稳定，卡片常常有标题没图。
 // 站点默认图兜底是上游没有的一档，用于保证非文章页（首页 / 归档 / 枢纽页）也带 og:image。
+// 非文章页在开启生成时改用站点级卡片 /og/site.png（1200×630）：原来的默认图是 256×256 的
+// 方形头像，塞进横向分享卡片会被裁得只剩中间一块。
+const generatedOgImagePath = siteConfig.generateOgImages
+	? postSlug
+		? `/og/${postSlug}.png`
+		: "/og/site.png"
+	: "";
 const ogImageUrl =
-	(siteConfig.generateOgImages && postSlug
-		? new URL(`/og/${postSlug}.png`, Astro.site).toString()
+	(generatedOgImagePath
+		? new URL(generatedOgImagePath, Astro.site).toString()
 		: "") ||
 	ogImage ||
 	new URL(siteConfig.defaultOgImage, Astro.site).toString();
+
+// 生成卡片的尺寸固定为 1200×630（见 src/utils/og-card.ts）；其它来源（显式封面 / 默认图）
+// 尺寸不定，因此只在用生成卡片时声明宽高——微信 / QQ 靠这两个值判断卡片比例。
+const ogImageIsCard = Boolean(generatedOgImagePath);
+const OG_CARD_WIDTH = 1200;
+const OG_CARD_HEIGHT = 630;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
@@ -161,6 +174,8 @@ const siteLang = lang.replace("_", "-");
     <meta property="og:description" content={description || siteConfig.description || pageTitle} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:alt" content={pageTitle} />
+    {ogImageIsCard && <meta property="og:image:width" content={String(OG_CARD_WIDTH)} />}
+    {ogImageIsCard && <meta property="og:image:height" content={String(OG_CARD_HEIGHT)} />}
     {setOGTypeArticle ? (
       <meta property="og:type" content="article" />
     ) : (

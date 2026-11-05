@@ -619,10 +619,24 @@ const payload = JSON.stringify({ lunarInfo: LUNAR_INFO, terms: SOLAR_TERMS });
 				return out;
 			}
 
+			// 只拉真正存在的年份文件：年份从已有数据里推导，不去猜
+			// 只认节假日/调休两类——它们才是 holidays-<年份>.json 的来源；
+			// 校历跨学年、纪念日与文章都另有出处，算进来会拉出不存在的年份文件
+			function holidayYears() {
+				var set = {};
+				items.forEach(function (it) {
+					if (!it || typeof it.date !== "string") return;
+					if (it.kind !== "holiday" && it.kind !== "workday") return;
+					if (/^\d{4}-/.test(it.date)) set[it.date.slice(0, 4)] = 1;
+				});
+				var list = Object.keys(set).sort();
+				// 数据为空时退回当年，别把覆盖面丢光
+				return list.length ? list : [String(new Date().getFullYear())];
+			}
+
 			function loadRaw() {
 				var year = new Date().getFullYear();
-				// 跨年前后都在视野里，往前一年也试一次
-				var years = [year, year + 1, year - 1];
+				var years = holidayYears();
 				var jobs = [fetchJson(RAW_BASE + "seu-calendar.json"), fetchJson(RAW_BASE + "personal-records.json")];
 				years.forEach(function (y) {
 					jobs.push(
