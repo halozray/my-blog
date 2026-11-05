@@ -18,11 +18,7 @@ const localPlaylist = (config.local?.playlist ?? []).map((song) => ({
 			? song.cover
 			: url(song.cover)
 		: undefined,
-	lrc: song.lrc
-		? isFullUrl(song.lrc)
-			? song.lrc
-			: url(song.lrc)
-		: undefined,
+	lrc: song.lrc ? (isFullUrl(song.lrc) ? song.lrc : url(song.lrc)) : undefined,
 }));
 
 // 歌单来源：配置了 playlists 才有切换标签；未配置时保持旧的单歌单行为

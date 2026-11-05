@@ -631,9 +631,7 @@ export function setupMusicPlayerWidget(): void {
 				"click",
 				() => {
 					// 点列表条目 = 用户主动点歌，此时才换播放队列（见 playViewTrack）
-					mgr.playViewTrack(
-						Number.parseInt(itemEl.dataset.index ?? "0", 10),
-					);
+					mgr.playViewTrack(Number.parseInt(itemEl.dataset.index ?? "0", 10));
 				},
 				{ signal },
 			);
@@ -784,7 +782,10 @@ export function setupMusicPlayerWidget(): void {
 			button.type = "button";
 			button.className = "music-player__tab music-player__source-tab";
 			button.setAttribute("role", "tab");
-			button.setAttribute("aria-selected", index === activeIndex ? "true" : "false");
+			button.setAttribute(
+				"aria-selected",
+				index === activeIndex ? "true" : "false",
+			);
 			button.classList.toggle("is-active", index === activeIndex);
 			button.textContent = source.label;
 			button.addEventListener(
@@ -828,7 +829,9 @@ export function setupMusicPlayerWidget(): void {
 			return;
 		}
 		// 面板展示的是当前查看的歌单（viewTracks），高亮只看正在播的歌是否在其中
-		const view = (s.viewTracks.length > 0 ? s.viewTracks : s.playlist) as TrackInfo[];
+		const view = (
+			s.viewTracks.length > 0 ? s.viewTracks : s.playlist
+		) as TrackInfo[];
 		const playing = s.track;
 		const viewHighlight = playing
 			? view.findIndex(

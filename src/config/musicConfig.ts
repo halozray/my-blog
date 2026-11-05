@@ -44,8 +44,10 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 加歌单只需往这里加一条：在线给 server/id，本地给 local: true
 	// 除首项外的在线歌单首次点选时才请求（懒加载），加载过的会话内缓存
 	playlists: [
-		{ label: "我喜欢的音乐", server: "netease", id: "2804070207" },
-		// QQ 歌单音频直链公开 Meting 实例取不到，走本站 api/music 自建解析
+		// 网易云受限歌在 Meting 只给 30 秒试听，点播与拉单统一走本站 api/music 自建解析
+		// （自建解析本平台没完整版时会换源取整曲；歌词仍取 Meting 的 lrc）
+		{ label: "我喜欢的音乐", server: "netease", id: "2804070207", api: "self" },
+		// QQ 歌单音频直链公开 Meting 实例取不到，同样走本站 api/music 自建解析
 		{ label: "F 2", server: "tencent", id: "9439238150", api: "self" },
 		{ label: "Do", server: "tencent", id: "9316062023", api: "self" },
 		{ label: "syz", server: "tencent", id: "9356695532", api: "self" },
