@@ -5,11 +5,11 @@ updated: 2026-09-15
 description: 简单记录一下自己申请bybit卡的过程和成功绑定微信支付宝还有Google play商店的经历，不过我还没有买币，可能只能薅一些免费的羊毛。
 image: ./cover.jpg
 tags:
+  - 银行卡
   - 借记卡
   - 微信
   - 支付宝
-  - 标签1
-category: 海外支付
+category: 生活杂谈
 draft: false
 ---
 

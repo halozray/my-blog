@@ -5,9 +5,10 @@ updated: 2025-11-16
 description: 今天给大家带来最近的电路实验，因为此次电路实验是全部自己在电脑仿真软件Multisim上做的，而且是按照老师给的模板填写的实验报告，所以很少有地方能体现自己的实验过程，给大家一个参考，同时我也记录一下自己的报告。
 image: ./cover.png
 tags:
-  - 电路实验
   - 实验报告
-category: 实验报告
+  - 电路实验
+  - Multisim
+category: 学习文档
 draft: false
 ---
 

@@ -5,14 +5,12 @@ updated: 2026-10-16
 description: 香港 VPS 上 docker 部署 Waline（评论）和 Umami（统计），nginx 反代 + Cloudflare HTTPS，博客端接入配置。踩坑全记录，命令都验证过。
 image: ./cover.jpg
 tags:
-  - 博客
-  - 教程
-  - Docker
-  - Cloudflare
   - Waline
   - Umami
-  - 统计
-category: 教程
+  - Docker
+  - Cloudflare
+  - Nginx
+category: 部署文档
 draft: false
 ---
 

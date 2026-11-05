@@ -5,14 +5,11 @@ updated: 2026-10-17
 description: 博客统计页直连 Umami API 太慢？用 VPS cron 每 5 分钟拉数据写成静态 JSON，前端优先读 JSON、失败降级走 API。Cloudflare CDN 缓存，毫秒级加载，附完整脚本和部署步骤。
 image: ./cover.jpg
 tags:
-  - 博客
-  - 教程
   - Umami
   - 统计
   - 性能优化
   - VPS
-  - Cloudflare
-category: 教程
+category: 部署文档
 draft: false
 ---
 

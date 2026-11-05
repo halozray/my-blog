@@ -5,9 +5,9 @@ updated: 2025-11-13
 description: 在如今的二次元世界里，一款好用的动漫观看软件是每位追番党的刚需。面对市面上琳琅满目的选择，今天要为大家推荐两款风格不同但都备受好评的免费动漫应用——Animeko与Lanerc，如果喜欢轻松追番的休闲观众，那么这两款总有一款适合你。
 image: ./cover.jpg
 tags:
-  - 软件推荐
   - 动漫
-category: 动漫
+  - 软件推荐
+category: 生活杂谈
 draft: false
 ---
 

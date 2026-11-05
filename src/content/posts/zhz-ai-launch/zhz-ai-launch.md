@@ -5,11 +5,11 @@ updated: 2026-10-18
 description: 博客评论区接入 AI 自动回复，从改名到修三个离谱 bug，再到评论区自动刷新，一天的折腾全记录。
 image: ./cover.webp
 tags:
-  - 博客
-  - Waline
   - AI
-  - 折腾记录
-category: 博客
+  - Waline
+  - 博客
+  - 折腾
+category: 实践笔记
 draft: false
 ---
 

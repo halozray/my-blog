@@ -5,10 +5,10 @@ updated: 2026-09-15
 description: 文章描述
 image: ./cover.jpg
 tags:
-  - 随笔
+  - LINUX DO
   - 折腾
-  - Linux_do
-category: 随笔
+  - 随笔
+category: 实践笔记
 draft: false
 ---
 

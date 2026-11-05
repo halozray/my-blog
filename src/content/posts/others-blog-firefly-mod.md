@@ -3,8 +3,12 @@ title: Firefly 博客魔改总结：Astro 内容系统、Svelte 交互与部署
 image: ./assets/others-blog-firefly-mod.webp
 published: 2026-08-21
 description: 记录 Firefly 博客主题的二次开发，涵盖 Astro 内容系统、Svelte 交互、首页动效、音乐播放器、标签图谱、留言板和 Cloudflare 集成。
-tags: [博客, 二开, firefly]
-category: 学习文档
+tags:
+  - Astro
+  - Firefly
+  - 二开
+  - 博客
+category: 设计文档
 pinned: true
 draft: false
 ---

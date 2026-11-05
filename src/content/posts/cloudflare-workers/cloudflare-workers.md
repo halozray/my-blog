@@ -3,10 +3,12 @@ title: 如何使用cloudflare workes 功能搭建代理节点
 published: 2025-10-25
 updated: 2025-10-26
 tags:
-  - cloudflare
+  - Cloudflare
+  - Workers
+  - 代理
 description: 内容来自YouTube大佬：seven科技生活。作为一名技术小白，一步步跟着他做也成功搭建出自己的节点，并且能解锁x，chatgpt和gemini，能秒开高帧视频，使用体验也是不错的。
 image: ./demo-avatar 1.png
-category: 代理
+category: 部署文档
 draft: false
 ---
 ### 准备工作

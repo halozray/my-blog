@@ -8,7 +8,7 @@ tags:
   - 银行卡
   - 万事达
   - 折腾
-category: 海外支付
+category: 生活杂谈
 draft: false
 ---
 

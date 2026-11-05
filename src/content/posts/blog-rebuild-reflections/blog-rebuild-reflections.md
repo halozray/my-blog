@@ -6,8 +6,10 @@ description: 今天基本上bug也修改完了，这三天的重构过程真的�
 image: ./cover.png
 tags:
   - AI
-  - 折腾记录
-category: 随笔
+  - 博客
+  - 折腾
+  - 随笔
+category: 实践笔记
 draft: false
 ---
 

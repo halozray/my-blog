@@ -7,7 +7,7 @@ image: ./cover.png
 tags:
   - 音乐鉴赏
   - 课程论文
-category: 音乐
+category: 学习文档
 draft: false
 ---
 

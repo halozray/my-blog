@@ -5,13 +5,11 @@ updated: 2026-10-25
 description: 为了让写博客这件事变得赏心悦目，我重构了整套系统：自研控制台、评论迁移，与一个未解决的难题
 image: ./cover.webp
 tags:
-  - 折腾记录
   - Cloudflare
-  - Waline
-  - 控制台
   - 网络
-  - AI
-category: 博客
+  - 控制台
+  - 排查
+category: 实践笔记
 draft: false
 ---
 

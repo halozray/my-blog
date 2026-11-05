@@ -5,10 +5,10 @@ updated: 2025-11-07
 description: 好几天没有更新内容了，学业压力太大了，没有时间书写其他方面的内容，以后会慢慢更新。今天带来的是数电实验第一章：组合逻辑电路
 image: ./cover.png
 tags:
-  - 学习
+  - 实验报告
   - 数电
   - 数电实验
-category: 实验报告
+category: 学习文档
 draft: false
 ---
 
