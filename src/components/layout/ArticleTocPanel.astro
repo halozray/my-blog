@@ -37,9 +37,12 @@ const mindMapZoomOutLabel = i18n(I18nKey.tocMindMapZoomOut);
 const mindMapResetLabel = i18n(I18nKey.tocMindMapReset);
 const mindMapFullscreenLabel = i18n(I18nKey.tocMindMapFullscreen);
 const closeLabel = i18n(I18nKey.close);
-const sponsorMethods = sponsorConfig.methods
-	.filter((method) => method.enabled && method.qrCode)
-	.slice(0, 3);
+// 打赏入口跟随 siteConfig.pages.sponsor：页面关闭时文章页也不出现支持按钮与收款码
+const sponsorMethods = siteConfig.pages.sponsor
+	? sponsorConfig.methods
+			.filter((method) => method.enabled && method.qrCode)
+			.slice(0, 3)
+	: [];
 const statsBackground = await buildCoverImage({
 	image: homeConfig.avatarBanner || "",
 	width: COVER_IMAGE_WIDTH,
