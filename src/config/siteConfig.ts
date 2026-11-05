@@ -206,20 +206,20 @@ export const siteConfig: SiteConfig = {
 		// Microsoft Clarity ID
 		microsoftClarityId: "",
 		// Umami 统计配置
-		// 实验站暂不接 Umami：主站实例按 lanerc.me 建立，混用会污染数据。
-		// 待站长新建实验站专用实例后回填 websiteId / scriptUrl。
+		// 实验站接入站长自建 Umami 实例下的独立站点（与主站同实例、不同 website-id，互不污染）
 		umamiAnalytics: {
-			websiteId: "",
-			shareId: "",
-			scriptUrl: "",
+			websiteId: "9ab5dd2c-4b34-488e-a563-cba292fba104",
+			shareId: "2uCjyieGcgw1bNqu",
+			scriptUrl: "https://umami.lanerc.me/script.js",
 			// 使用 Umami 的 PV 展示文章详情、列表与网格浏览量；启用时优先于评论系统统计
+			// 数据源为站长的公开分享链接 https://umami.lanerc.me/share/2uCjyieGcgw1bNqu
 			pageviews: {
-				enabled: false,
+				enabled: true,
 			},
 			// 是否追踪出站链接
-			trackOutboundLinks: false,
+			trackOutboundLinks: true,
 			// 是否收集浏览器性能指标
-			collectWebVitals: false,
+			collectWebVitals: true,
 			// 会话回放配置
 			relpays: {
 				// 是否启用会话回放
