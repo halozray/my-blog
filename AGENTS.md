@@ -203,6 +203,13 @@ pnpm format              # biome format --write ./src，会修改源码
 - 旧站 Fuwari（`Misty-ui-source/fuwari`）仅只读：克隆到 `E:\idea` 之外的独立目录（如 `E:\fuwari-source`），不许改、不许推。迁入范围为 17 篇文章 + about，原文如实对应；frontmatter 字段对不上的，在映射表标注请站长定。
 - 黑猫角色、站立图、音效等素材只用原仓库文件，禁止 AI 生成或凭空捏造替代素材。
 
+## 更新日志（`src/content/spec/log.md`）
+
+- **底座历史原样保留**：mmz 原版的 72 条是底座历史，原样保留，不改、不删、不重排。
+- **大更新补一条**：每次大更新（新功能、重构、大修复）推送前，按 `log.md` 原生格式在文件顶部补一条本次总结——`## 标题` + `- 日期：`（当天）/ `- 类型：`（按性质取 `feat` / `fix` / `style` / `refactor` / `chore`）/ `- 页面：` / `- 简述：`（一句话），正文分条列本次改动要点。随本批同一个 commit 提交；小修小补不用写。
+- **页面标签打准**：`- 页面：` 按实际涉及的页面填，标识取 `src/utils/changelog.ts` 的 `PAGE_META`（home / archive / list / categories / friends / gallery / guestbook / post / about / site）。日志页的连线由 `buildChangelogLinks` 按共享页面标签自动生成，标签准，连线才对。
+- **只记本站自己的事**：主站的更新日志不往这里搬。
+
 ## 功能与取舍
 
 - mmz 原版功能默认**全保留且可用**；确实留不下的，先报告、由站长拍板，不许自行砍掉或事后既成事实。
