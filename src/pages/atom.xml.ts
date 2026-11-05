@@ -1,7 +1,7 @@
-import type { APIContext } from "astro";
-import { siteConfig } from "@/config";
 import { getSortedPosts } from "@utils/content-utils";
 import { url } from "@utils/url-utils";
+import type { APIContext } from "astro";
+import { siteConfig } from "@/config";
 
 /** 转义 XML 文本与属性值，避免标题/描述里的特殊字符破坏 feed 结构 */
 function escapeXml(value: string): string {
@@ -29,7 +29,9 @@ export async function GET(context: APIContext): Promise<Response> {
 		const published = toIsoDate(post.data.published);
 		const updated = toIsoDate(post.data.updated ?? post.data.published);
 		// 加密文章的正文与摘要都不进 feed，只保留标题与链接
-		const summary = post.data.password ? "" : (post.data.description ?? "").trim();
+		const summary = post.data.password
+			? ""
+			: (post.data.description ?? "").trim();
 
 		const parts = [
 			"<entry>",

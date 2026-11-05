@@ -26,8 +26,7 @@ export const siteConfig: SiteConfig = {
 	// 同时用作：首页与各功能页的 <meta name="description"> 兜底、JSON-LD 里
 	// WebSite/Person 实体的 description。所以这里写清站点的实际内容方向，
 	// 而不是只写"记录学习与生活"这类无检索价值的通用表述。
-	description:
-		"生活原本沉闷，但跑起来就有风",
+	description: "生活原本沉闷，但跑起来就有风",
 
 	// 站点关键词
 	keywords: [
