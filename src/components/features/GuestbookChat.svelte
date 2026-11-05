@@ -149,7 +149,9 @@ function canManageMessage(message: GuestbookMessage): boolean {
 	if (!authUser?.token || !message.objectId || message.localState) return false;
 	return (
 		authUser.type === "administrator" ||
-		(typeof message.userId === "number" && message.userId === authUser.objectId)
+		(authUser.objectId != null &&
+			message.userId != null &&
+			String(message.userId) === String(authUser.objectId))
 	);
 }
 
@@ -248,7 +250,8 @@ function isAuthUser(value: unknown): value is GuestbookAuthUser {
 		typeof user.email === "string" &&
 		typeof user.token === "string" &&
 		user.token.length > 0 &&
-		typeof user.objectId === "number" &&
+		(typeof user.objectId === "number" ||
+			(typeof user.objectId === "string" && user.objectId.length > 0)) &&
 		(user.type === "administrator" || user.type === "guest")
 	);
 }

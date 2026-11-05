@@ -39,6 +39,7 @@ export const PAGE_META: Record<string, PageMeta> = {
 	friends: { label: "友链页", url: "/friends/" },
 	gallery: { label: "相册页", url: "/gallery/" },
 	guestbook: { label: "留言板", url: "/guestbook/" },
+	calendar: { label: "日历页", url: "/calendar/" },
 	post: { label: "文章详情页" },
 	about: { label: "关于页", url: "/about/" },
 	site: { label: "全站" },

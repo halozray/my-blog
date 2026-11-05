@@ -2,7 +2,13 @@ import type { UserInfo } from "@waline/api";
 
 type GuestbookMessageLocalState = "sending" | "failed";
 
-export type GuestbookAuthUser = UserInfo & {
+/**
+ * @waline/api 的 UserInfo 把 objectId 声明为 number；本站 Waline 使用 MongoDB 存储，
+ * 实际返回的是字符串 ID（如 "6aec570817c381000728314d"），故在此覆盖为两种都接受。
+ * node_modules 里的上游类型不可改，只能在本层放宽。
+ */
+export type GuestbookAuthUser = Omit<UserInfo, "objectId"> & {
+	objectId?: number | string;
 	remember?: boolean;
 };
 
@@ -48,7 +54,8 @@ export interface GuestbookSpeechSession {
 
 export interface GuestbookChatMessage {
 	id: string;
-	objectId?: number;
+	/** MongoDB 存储下为字符串 ID，兼容数值型存储 */
+	objectId?: number | string;
 	/** 所在线程的根评论 ID，回复子评论时作为 rid 提交 */
 	rootId?: number;
 	userId?: number;

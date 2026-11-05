@@ -291,8 +291,10 @@ export function buildGuestbookReplyFields(
 	target: GuestbookChatMessage | null,
 ): { pid?: number; rid?: number } {
 	if (!target?.objectId) return {};
-	const pid = target.objectId;
-	return { pid, rid: target.rootId ?? pid };
+	// @waline/api 的 d.ts 把 pid/rid 声明为 number，而本站 Waline 使用 MongoDB 存储，
+	// 运行期实际是字符串 ID；上游类型与实际存储不符，故仅在类型层收窄，值原样透传。
+	const pid = target.objectId as number;
+	return { pid, rid: (target.rootId ?? target.objectId) as number };
 }
 
 export function buildGuestbookEditedMessageBody(

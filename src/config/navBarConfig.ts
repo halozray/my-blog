@@ -97,6 +97,12 @@ const buildNavBarConfig = (): NavBarConfig => {
 	if (siteConfig.pages.gallery) {
 		myChildren.push(LinkPreset.Gallery);
 	}
+	// 日历页常驻（与相册/关于同组），文案直接写中文，不新增 i18n key
+	myChildren.push({
+		name: "日历",
+		url: "/calendar/",
+		icon: "material-symbols:calendar-month-rounded",
+	});
 	if (siteConfig.pages.sponsor) {
 		myChildren.push(LinkPreset.Sponsor);
 	}
