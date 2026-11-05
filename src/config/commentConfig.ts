@@ -2,8 +2,8 @@ import type { CommentConfig } from "../types/config";
 
 export const commentConfig: CommentConfig = {
 	// 评论系统类型: none, twikoo, waline, giscus, disqus, artalk，默认为none，即不启用评论系统
-	// 实验站：组件保留，后端暂不接入（主站 Waline 专用，混用会串评论）
-	type: "none",
+	// 实验站：接本站专属 Waline（与主站分开部署，避免串评论）
+	type: "waline",
 
 	//twikoo评论系统配置，版本1.7.4
 	twikoo: {
@@ -16,8 +16,8 @@ export const commentConfig: CommentConfig = {
 
 	//waline评论系统配置
 	waline: {
-		// waline 后端服务地址（实验站暂不接入，留空占位）
-		serverURL: "",
+		// waline 后端服务地址（本站专属部署）
+		serverURL: "https://waline-idea.lanerc.me/",
 		// 设置 Waline 评论系统语言
 		lang: "zh-CN",
 		// 设置 Waline 评论系统表情地址
