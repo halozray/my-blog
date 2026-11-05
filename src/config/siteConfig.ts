@@ -7,10 +7,10 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "MmzMing的博客",
+	title: "Alexander",
 
 	// 站点副标题
-	subtitle: "MmzMing",
+	subtitle: "Daily life, music, and little thoughts",
 
 	// 头像：owner=站长，bot=AI bot
 	// 使用 public 目录绝对路径，或远程 URL
@@ -20,24 +20,24 @@ export const siteConfig: SiteConfig = {
 	},
 
 	// 站点 URL
-	site_url: "https://tblog.mmzhiku.xyz",
+	site_url: "https://idea.lanerc.me",
 
 	// 站点描述
 	// 同时用作：首页与各功能页的 <meta name="description"> 兜底、JSON-LD 里
 	// WebSite/Person 实体的 description。所以这里写清站点的实际内容方向，
 	// 而不是只写"记录学习与生活"这类无检索价值的通用表述。
 	description:
-		"记录 Java 后端与 AI 工程的实践笔记，涵盖并发编程、接口安全、认证授权、缓存设计、性能优化与 RAG 应用开发。",
+		"生活原本沉闷，但跑起来就有风",
 
 	// 站点关键词
 	keywords: [
-		"MmzMing",
-		"JAVA",
-		"AI",
-		"Astro",
-		"ACGN",
+		"zhz",
+		"Alexander",
+		"日常",
+		"音乐",
+		"碎碎念",
 		"博客",
-		"技术博客",
+		"Astro",
 		"静态博客",
 	],
 
@@ -122,13 +122,13 @@ export const siteConfig: SiteConfig = {
 			alt: "logo",
 		},
 		// 导航栏标题
-		title: "MmzMing的博客",
+		title: "Alexander",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 	},
 
 	// 站点开始日期，用于统计运行天数
-	siteStartDate: "2026-05-07",
+	siteStartDate: "2026-10-15",
 
 	// 站点时区（IANA 时区字符串），用于格式化bangumi、rss里的构建日期时间等等..
 	// 示例："Asia/Shanghai", "UTC", 如果为空，则按照构建服务器的时区进行时区转换
@@ -176,8 +176,8 @@ export const siteConfig: SiteConfig = {
 	pages: {
 		// 友链页面开关
 		friends: true,
-		// 打赏页面开关
-		sponsor: true,
+		// 打赏页面开关（本站不设打赏，关页保留组件）
+		sponsor: false,
 		// 留言板页面开关，需要配置评论系统
 		guestbook: true,
 		// 相册页面开关
@@ -207,18 +207,20 @@ export const siteConfig: SiteConfig = {
 		// Microsoft Clarity ID
 		microsoftClarityId: "",
 		// Umami 统计配置
+		// 实验站暂不接 Umami：主站实例按 lanerc.me 建立，混用会污染数据。
+		// 待站长新建实验站专用实例后回填 websiteId / scriptUrl。
 		umamiAnalytics: {
-			websiteId: "d47eea8b-7ad5-472b-a838-c873ba859c4f",
-			shareId: "HZrqqAfVdx1UEVNm",
-			scriptUrl: "https://stats.mmzhiku.xyz/script.js",
+			websiteId: "",
+			shareId: "",
+			scriptUrl: "",
 			// 使用 Umami 的 PV 展示文章详情、列表与网格浏览量；启用时优先于评论系统统计
 			pageviews: {
-				enabled: true,
+				enabled: false,
 			},
 			// 是否追踪出站链接
-			trackOutboundLinks: true,
+			trackOutboundLinks: false,
 			// 是否收集浏览器性能指标
-			collectWebVitals: true,
+			collectWebVitals: false,
 			// 会话回放配置
 			relpays: {
 				// 是否启用会话回放

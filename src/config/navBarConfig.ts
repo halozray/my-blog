@@ -14,23 +14,13 @@ import { siteConfig } from "./siteConfig";
 const personalSites: PersonalSite[] = [
 	{
 		name: "个人主站",
-		url: "https://www.mmzhiku.xyz/",
-		icon: "https://www.mmzhiku.xyz/favicon.svg",
+		url: "https://lanerc.me/",
+		icon: "https://lanerc.me/favicon.ico",
 	},
 	{
-		name: "memos记事本",
-		url: "https://memos.mmzhiku.xyz/",
-		icon: "https://memos.mmzhiku.xyz/logo.webp",
-	},
-	{
-		name: "站点统计",
-		url: "https://stats.mmzhiku.xyz/share/HZrqqAfVdx1UEVNm",
-		icon: "https://stats.mmzhiku.xyz/favicon-32x32.png",
-	},
-	{
-		name: "工具盒子",
-		url: "https://tool.mmzhiku.xyz/",
-		icon: "https://tool.mmzhiku.xyz/images/favicon/favicon-48x48.png",
+		name: "实验站",
+		url: "https://idea.lanerc.me/",
+		icon: "https://idea.lanerc.me/favicon/favicon.svg",
 	},
 ];
 

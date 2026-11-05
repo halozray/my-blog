@@ -3,19 +3,19 @@ import type { HomeConfig } from "../types/config";
 export const homeConfig: HomeConfig = {
 	// 资料卡横幅图（导航 Logo 资料卡第一层）
 	// 留空则回退为「站长头像模糊放大」当背景
-	avatarBanner: "/assets/images/avatar-banner.webp",
+	avatarBanner: "",
 
 	// 名字
-	name: "MmzMing",
+	name: "zhz",
 
 	// 首页展示名字（留空则使用 name）
-	displayName: "MmzMing",
+	displayName: "zhz",
 
 	// 职业/身份标签
-	occupation: "[全干工程师 / 技术博主]",
+	occupation: "[电子科学与技术 / 大三摆烂博主]",
 
 	// 个人签名（支持多条，会循环打字+删除效果）
-	bio: ["且视他人之疑目如盏盏鬼火，大胆地去走你的夜路"],
+	bio: ["Hello, I'm zhz. 普通学生，喜欢音乐和瞎折腾，这里放我的日常和碎碎念。"],
 
 	hero: {
 		mosaic: {
@@ -43,8 +43,8 @@ export const homeConfig: HomeConfig = {
 			interactionHold: 0.06,
 		},
 		contact: {
-			platform: "B站",
-			handle: "Mmz明崽",
+			platform: "Email",
+			handle: "xz011@qq.com",
 		},
 		sticker: {
 			image: "/assets/images/home/doll.avif",
@@ -212,28 +212,22 @@ export const homeConfig: HomeConfig = {
 	// `pnpm add @iconify-json/<icon-set-name>`
 	links: [
 		{
-			name: "qq",
-			icon: "fa7-brands:qq",
-			url: "https://qm.qq.com/q/2R07cjGTZ0",
-			color: "#12B7F6",
-		},
-		{
-			name: "B站",
-			icon: "fa7-brands:bilibili",
-			url: "https://space.bilibili.com/15446538",
-			color: "#FB7299",
-		},
-		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
-			url: "https://github.com/MmzMing",
+			url: "https://github.com/Misty-ui-source",
 			color: "#1F6FEB",
 		},
 		{
-			name: "站内留言",
-			icon: "material-symbols:chat-rounded",
-			url: "/guestbook/",
-			color: "#B8FF1F",
+			name: "Email",
+			icon: "material-symbols:mail",
+			url: "mailto:xz011@qq.com",
+			color: "#6E7681",
+		},
+		{
+			name: "Telegram",
+			icon: "fa7-brands:telegram",
+			url: "https://t.me/zhzhk27",
+			color: "#26A5E4",
 		},
 		{
 			name: "RSS",
