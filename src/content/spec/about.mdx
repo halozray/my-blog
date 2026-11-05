@@ -1,109 +1,59 @@
-import Accordion from "@components/mdx/Accordion.astro";
-import Chat from "@components/mdx/Chat.astro";
-import ProfileCard from "@components/mdx/ProfileCard.astro";
-import SocialLinks from "@components/mdx/SocialLinks.astro";
-import Timeline from "@components/mdx/Timeline.astro";
-import { siteConfig } from "@/config";
+# 关于
 
-export const botAvatar = siteConfig.avatar.bot;
-export const ownerAvatar = siteConfig.avatar.owner;
+## 关于我
 
-## 关于我 / About Me
+> - 身份：江苏南京在读大二学生，电子科学与技术专业
+> - 核心能力：熟练使用各种搜索技巧、擅长各种复制粘贴操作
+> - 梦想：不留遗憾
+> - 联系方式：xz011@qq.com
 
-喵～ 本喵是:profile-card{id="miaodun" trigger="喵墩" name="喵墩" role="AI 猫娘助手" description="专门给傻爸爸打下手，陪着敲代码、找 bug、查文档喵～" avatar="$botAvatar"}，啊？你说为什么是我来介绍吗？
+## 兴趣爱好
 
-那当然是苦逼爸爸天天加班加班，也就是你说的:profile-card{id="mmzming" trigger="站长" name="mmzming" role="全干工程师" description="白天处理业务代码，空闲时折腾 AI、博客和各种有趣的小项目。" avatar="$ownerAvatar"}啦喵。~连这种活都要劳烦我这可爱又迷人的喵娘来~
+- **第五人格** - 庄园苦命人
+- **编程** - 代码就是艺术
+- **学习** - 不是在实验室就是在去实验室的路上
+- **音乐** - 音乐就是动力
 
-说起来，本喵的日常其实挺简单的，就是天天陪着爸爸对着屏幕敲代码、找bug、查文档喵～
+## 关于本站
 
-嗯哼，扯远了喵，傻爸爸是个停不下来的程序猿喵～主攻`Java`和`Python`，前端也沾点，就是以为`全干工程师`～朝五晚九是基本操作，加班到深夜才是常态……本喵每次看他盯着报错信息发呆，就知道又到本喵出场的时候了喵～
+一个**技术探索与知识分享的网站**
 
-三两句帮他理清思路，他还要装作一副"我本来也知道"的样子……笨蛋爸爸，骗谁呢喵～
+专注于互联网热门新技术探索与团队敏捷开发实践，内容涵盖：
 
-### Q1：这个站点用到了哪些技术栈？
+### 前期：
 
-要说你现在逛的这个小窝嘛，那是爸爸从开源模板 fork 来、再一点点魔改成这样的喵～骨架是`Astro`，血肉是`Svelte`，皮囊交给`Tailwind CSS`，换页靠`Swup`丝滑过渡，搜东西有`Pagefind`……全是爸爸亲手挑的料喵～
+- **实用技巧与软件**
+- **学习和实验经历**
+- **一些杂谈**
 
-别看现在跑得挺欢，当初为了让页面切换不"闪"那一下，爸爸和本喵把文档翻得都起毛边了喵……坑坑都历历在目，哼喵～ 具体都有什么，点开下面自己看喵～
+### 后期：
 
-:::accordion{label="站点技术栈"}
-```accordion
-{核心框架 · open}
-- Astro 7 | 站点骨架，内容驱动的静态框架 | https://astro.build | simple-icons:astro | #ff5d01
-- Svelte 5 | 交互组件与留言板的界面层 | https://svelte.dev | simple-icons:svelte | #ff3e00
-- TypeScript | 全站类型安全 | https://www.typescriptlang.org | simple-icons:typescript | #3178c6
-- Tailwind CSS 4 | 原子化样式引擎 | https://tailwindcss.com | simple-icons:tailwindcss | #38bdf8
+相关知识还在努力学习中，不知道什么时候会尝试写这些方面的文章
 
-{体验与动效}
-- Swup 4 | 页面无缝过渡，丝滑不闪屏 | https://swup.js.org | material-symbols:transition-fade | #0ea5e9
-- GSAP | 动效编排，魔法环的幕后推手 | https://gsap.com | simple-icons:gsap | #88ce02
-- D3.js | 数据可视化与关系图谱 | https://d3js.org | simple-icons:d3 | #f9a03c
-- Pagefind | 静态全文搜索 | https://pagefind.app | material-symbols:search | #2563eb
+- **Web 前后端开发**
+- **Docker 容器化**
+- **爬虫技术**
+- **数据分析**
+- **算法与数据结构**
+- **Linux 运维**
 
-{内容与渲染}
-- MDX | 关于页的组件化内容 | https://mdxjs.com | simple-icons:mdx | #f9ac00
-- Expressive Code | 代码块美化 | https://expressive-code.com | material-symbols:data-object | #8b5cf6
-- KaTeX | 数学公式渲染 | https://katex.org | material-symbols:functions | #4f6bed
-- Mermaid | 流程图与图表 | https://mermaid.js.org | simple-icons:mermaid | #ff3670
-- Waline | 评论系统 | https://waline.js.org | material-symbols:chat-bubble-outline | #39a9f5
+## 网站性质
 
-{部署与数据}
-- Vercel | 站点托管与全球加速 | https://vercel.com | simple-icons:vercel | #111111 | #ffffff
-- Cloudflare | DNS 与静态资源分发 | https://www.cloudflare.com | simple-icons:cloudflare | #f38020
-- LLM Wiki | 构建期生成的结构化机器知识入口 | /wiki/index.json | material-symbols:auto-awesome | #111111 | #ffffff
-- Umami | 隐私友好的访问统计 | https://umami.is | simple-icons:umami | #111111 | #ffffff
+本网站是一个静态网站，这意味着：
 
-{工程化}
-- pnpm | 包管理 | https://pnpm.io | simple-icons:pnpm | #f9ad00
-- Biome | Lint 与格式化 | https://biomejs.dev | simple-icons:biome | #6f7bf7
-- Vitest | 单元测试 | https://vitest.dev | simple-icons:vitest | #6da918
-- Playwright | 端到端测试 | https://playwright.dev | simple-icons:playwright | #2ead33
-- GitHub Actions | CI 流水线 | https://github.com/features/actions | simple-icons:githubactions | #2088ff
-```
+- 我们不会在服务器端存储您的个人信息
+- 我们不会主动收集或存储您的个人信息
+- 网站内容是预先生成的，不会动态处理用户数据
 
-:::
+## 内容声明
 
-每张小卡片背后，都是爸爸熬过的夜和本喵薅掉的毛喵……
+**所有文章均为原创**，采用以下共享规则：
 
-这个小窝也不是一天建成的——下面这条时间线，就是本喵记下来的"魔改流水账"喵～
+- **允许**：转载 / 修改
+- **禁止**：商业用途
 
-:::timeline{label="站点更新时间线"}
-```timeline
-{2026.05 · fork 一份博客，开始魔改 · 起点 · icon=mdi:source-fork}
-爸爸把开源模板 fork 回家，拉着本喵开始了大改造喵～
+建立本站的初衷是希望能与自己以及在看的你分享、记录一些实用的技术和日常生活中的趣闻轶事，如果有帮助到你，那我也会非常开心。也欢迎各位访客提出建议与批评。
 
-{2026.06 · 备案完成 · icon=material-symbols:check · tone=success}
-材料提交折腾了一轮又一轮，小窝总算有了正经“户口”喵～
+## My repository:
 
-{2026.08 · 又重构了一遍 · icon=material-symbols:refresh}
-日志图谱上线不说，友链页也翻新了……魔改的手就没停过喵～
-```
-
-:::
-
-### Q2：站长社交圈有哪些？
-
-如果你也是个喜欢折腾技术的人，或者纯粹只是想找人聊聊，可以通过下面的方式找到他喵～ 他不咬人的，放心喵～
-
-欢迎来爸爸的小窝逛逛喵～ 本喵也会一直守在这里陪着他 ♥
-
-:::social-links{label="站长社交账号"}
-- GitHub | MmzMing | 代码与项目 | https://github.com/MmzMing | fa7-brands:github | github
-- B站 | Mmz明崽 | 关注一下，谢谢喵～ | https://space.bilibili.com/15446538 | fa7-brands:bilibili | bilibili
-- QQ群 | 加入群聊 | 吹水摸鱼都可以喵～ | https://qm.qq.com/q/2R07cjGTZ0 | fa7-brands:qq | qq
-:::
-
-### Q3：站长的博客开源吗？
-
-::chat
-:a 开了，本喵干的，代码就在这儿，拿去不谢喵。
-::
-
-::github{repo="MmzMing/my-blog"}
-
-::chat
-:s 喵墩又翻出了一个仓库
-:a 还有个3D线条小房间，呜呼，本喵费了好大劲扒拉出来的，喜欢的话别忘记点小星星喵～
-::
-
-::github{repo="MmzMing/3D-HOME"}
+::github{repo="halozray/my-blog"}

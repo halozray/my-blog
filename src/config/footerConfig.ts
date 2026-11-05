@@ -26,12 +26,11 @@ export const footerConfig: FooterConfig = {
 	],
 
 	// 备案信息（icp/police 留空则不显示对应条目）
-	// 萌备编号待申请，先占位；申请下来后替换 icp 文本即可
 	beian: {
-		icp: "萌ICP备（号码待定）",
+		icp: "萌ICP备20260663号",
 		police: "",
 		policeIcon: "",
-		icpUrl: "https://icp.gov.moe/",
+		icpUrl: "https://icp.gov.moe/?keyword=20260663",
 		policeUrl: "",
 	},
 
