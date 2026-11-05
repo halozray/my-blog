@@ -3,7 +3,7 @@ import type { HomeConfig } from "../types/config";
 export const homeConfig: HomeConfig = {
 	// 资料卡横幅图（导航 Logo 资料卡第一层）
 	// 留空则回退为「站长头像模糊放大」当背景
-	avatarBanner: "",
+	avatarBanner: "/assets/images/avatar-banner.webp",
 
 	// 名字
 	name: "zhz",
