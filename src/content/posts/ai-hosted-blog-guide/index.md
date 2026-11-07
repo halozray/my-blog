@@ -5,8 +5,10 @@ description: 不用买服务器、不用背命令、不用会写代码：Fork �
 image: ./cover.webp
 tags:
   - AI
-  - 博客搭建
-  - 教程
+  - Astro
+  - Firefly
+  - 二开
+  - 博客
 category: 设计文档
 draft: false
 ---
