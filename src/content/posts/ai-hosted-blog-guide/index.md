@@ -81,7 +81,7 @@ pnpm -v
 
 ### 2.3 先给 AI 一把"小钥匙"（重要，别跳过）
 
-AI 要替你推送代码，需要访问你 GitHub 仓库的权限。==不要把账号密码给它，也不要给全账号权限的令牌。== 正确做法是发一把只开一扇门的钥匙：
+AI 要替你推送代码，需要访问你 GitHub 仓库的权限。**不要把账号密码给它，也不要给全账号权限的令牌。** 正确做法是发一把只开一扇门的钥匙：
 
 1. 用小号登录 GitHub，右上角头像 → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**
 2. **Repository access** 只勾选你这个博客仓库（第三步 Fork 完再来建也行）
@@ -99,9 +99,9 @@ AI 要替你推送代码，需要访问你 GitHub 仓库的权限。==不要把�
 3. 弹出页面保持默认，点 **Create fork**
 4. 等待几秒，页面跳转到 `github.com/你的用户名/仓库名` —— 完成
 
-> 全程 1 分钟。==不要用 Download ZIP 下载==，Fork 才能和自动部署联动。
+> 全程 1 分钟。**不要用 Download ZIP 下载**，Fork 才能和自动部署联动。
 > >
-> 注意默认分支不一样：==my-blog 是 master，Firefly 是 main==。后面部署选生产分支时要选对，第八步会再提醒。下文以 my-blog 为例，Fork 的是 Firefly 的话把仓库名和分支名对应替换即可。
+> 注意默认分支不一样：**my-blog 是 master，Firefly 是 main**。后面部署选生产分支时要选对，第八步会再提醒。下文以 my-blog 为例，Fork 的是 Firefly 的话把仓库名和分支名对应替换即可。
 
 ## 四、第二步：让 AI 把项目克隆到本地
 
@@ -187,12 +187,12 @@ AI 会直接定位配置文件修改。注意第 5 条：模板自带的示例�
 
 > **一个保险设置（建议顺手加上）**：展开 **Environment Variables** 添加一条 `NODE_VERSION` = `22`。Astro 7 要求构建环境的 Node 必须 ≥ 22；Vercel 新项目默认一般已经达标，但个别项目默认版本偏低，会直接构建失败。把版本钉死，就不用赌它的默认值。
 
-**绑定自己的域名（可选/可直接使用托管到Cloudflare的域名）**：项目页 → **Settings → Domains → Add**，填入你的域名，按提示到域名注册商那里加一条 CNAME 记录指向 Vercel 给出的地址，等证书自动签发（几分钟）即可 HTTPS 访问。绑完别忘了回第七步，让 AI 把配置里的站点域名换成正式域名。域名托管在 Cloudflare 的，就在 Cloudflare 控制台的 DNS 页加这条记录——注意把代理状态设成==仅 DNS==（灰云）：开着橙云代理时，流量会先绕 Cloudflare 的默认节点，下面的优选 IP 不生效，还可能和 Vercel 的证书校验打架。
+**绑定自己的域名（可选/可直接使用托管到Cloudflare的域名）**：项目页 → **Settings → Domains → Add**，填入你的域名，按提示到域名注册商那里加一条 CNAME 记录指向 Vercel 给出的地址，等证书自动签发（几分钟）即可 HTTPS 访问。绑完别忘了回第七步，让 AI 把配置里的站点域名换成正式域名。域名托管在 Cloudflare 的，就在 Cloudflare 控制台的 DNS 页加这条记录——注意把代理状态设成**仅 DNS**（灰云）：开着橙云代理时，流量会先绕 Cloudflare 的默认节点，下面的优选 IP 不生效，还可能和 Vercel 的证书校验打架。
 
 <details>
 <summary>（可选）优选 IP：把国内访问速度再往上抬一截，可展开看配置方法</summary>
 
-Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节点对国内线路不一定最优。社区有个长期维护的优选项目 [enhanced-FaaS-in-China](https://github.com/xingpingcn/enhanced-FaaS-in-China)：它定期测速，挑出对电信、联通、移动都友好的 Vercel 节点，收成一个现成的优选域名，你把 CNAME 换过去就行。配置三步，==顺序不能反==：
+Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节点对国内线路不一定最优。社区有个长期维护的优选项目 [enhanced-FaaS-in-China](https://github.com/xingpingcn/enhanced-FaaS-in-China)：它定期测速，挑出对电信、联通、移动都友好的 Vercel 节点，收成一个现成的优选域名，你把 CNAME 换过去就行。配置三步，**顺序不能反**：
 
 1. 先按上面的官方流程，把 CNAME 指向 `cname.vercel-dns.com`，等 Vercel 把 SSL 证书签发好（Domains 页状态变 Valid）——证书没签下来就换走，会签不下来
 2. 再回域名注册商的 DNS 处，把这条 CNAME 的目标改成 `vercel-cname.xingpingcn.top`（在 Cloudflare 里改的同理，保持仅 DNS）
@@ -214,7 +214,7 @@ Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节
 
 ## 九、第七步（可选进阶）：给评论装一套独立后端
 
-模板自带评论功能，但后端要自己接。==千万不要和别人的站、或者你自己的主站共用一套评论后端==——共用同一套，两边的评论会串在一起，谁在实验站发的测试留言都会出现在正式站上（新手可忽略）。独立部署一套 Waline，零成本，十分钟：
+模板自带评论功能，但后端要自己接。**千万不要和别人的站、或者你自己的主站共用一套评论后端**——共用同一套，两边的评论会串在一起，谁在实验站发的测试留言都会出现在正式站上（新手可忽略）。独立部署一套 Waline，零成本，十分钟：
 
 1. **建数据库**：登录 MongoDB Atlas → 创建免费集群（M0）→ 在 **Database Access** 里新建一个数据库用户（记下用户名密码）→ **Network Access** 里放行 `0.0.0.0/0`（Vercel 没有固定出口 IP，必须全放行，安全靠强密码）→ 新建一个空数据库，例如 `waline-idea`
 2. **部署后端**：Fork 一份 [walinejs/waline](https://github.com/walinejs/waline) 到你的GitHub账号 → 回 Vercel 新建 Project 导入它 → **Root Directory 改成&#32;`example`**（真正的应用在子目录里，不改部署必失败）→ 项目 **Settings 里把 Node.js Version 改成 24.x**（默认的 26.x 与 Waline 不兼容）
@@ -233,7 +233,7 @@ Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节
 | `SITE_URL` | 你的博客地址，如 `https://idea.lanerc.me` |
 | `SECURE_DOMAINS` | 你的博客域名 + 这个评论后端自己的域名，逗号分隔 |
 
-> 最容易栽的坑：`MONGO_HOST` 和 `MONGO_PORT` ==必须写成 JSON 数组==。只写一个光秃秃的 27017，它会把这串数字拆开当成多个端口去连，部署显示成功、请求全部超时，你还会以为是网络问题。另一条：**不要把&#32;`mongodb+srv://`&#32;整串连接字符串直接粘进去**，Waline 不吃整串，必须拆成上面这组分项变量。
+> 最容易栽的坑：`MONGO_HOST` 和 `MONGO_PORT` **必须写成 JSON 数组**。只写一个光秃秃的 27017，它会把这串数字拆开当成多个端口去连，部署显示成功、请求全部超时，你还会以为是网络问题。另一条：**不要把&#32;`mongodb+srv://`&#32;整串连接字符串直接粘进去**，Waline 不吃整串，必须拆成上面这组分项变量。
 
 4. 部署成功后得到评论后端地址（如 `https://waline-idea.vercel.app`，建议同样在 Domains 里绑个自己的子域名，vercel大陆dns基本被污染的无法访问），回博客这边对 AI 说：
 
@@ -267,7 +267,7 @@ Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节
 | `meting.server` | 平台：`netease` 网易云、`tencent` QQ、`kugou` 酷狗 |
 | `meting.id` | 歌单 ID |
 
-> 两个避坑：`api.injahow.cn` 已经连不上了，别再往配置里填；官方源 `api.i-meto.com` 只能当列表备胎——它的音频"第二跳"是坏的（歌单加载正常、点哪首都没声），这也是公共源最常见的翻车姿势：==列表通 ≠ 能播，一定要逐首点开验收。==
+> 两个避坑：`api.injahow.cn` 已经连不上了，别再往配置里填；官方源 `api.i-meto.com` 只能当列表备胎——它的音频"第二跳"是坏的（歌单加载正常、点哪首都没声），这也是公共源最常见的翻车姿势：**列表通 ≠ 能播，一定要逐首点开验收。**
 > >
 > 歌单 ID 怎么找：网易云在 App 里分享歌单，链接里 `id=` 后面那串数字；QQ 音乐的 App 分享短链在电脑上打不开，去网页版 `y.qq.com` 打开歌单，地址栏里就是。
 
@@ -382,7 +382,7 @@ Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节
 1. 打开你 GitHub 上的仓库页面，点 **Sync fork → Update branch**
 2. 回本地对 AI 说：`我刚刚同步了上游更新，请 git pull 拉下来，检查和我的改动有没有冲突，有冲突先列给我，不要自行合并。`
 
-> **警告**：你的站改得越多，同步冲突越狠。如果已经像我一样大改过几十处，盲目 Sync 只会炸一地。更稳妥的策略是==不追大版本==：看上模板的某个新功能，单独让 AI 评估、单独搬那一小块。
+> **警告**：你的站改得越多，同步冲突越狠。如果已经像我一样大改过几十处，盲目 Sync 只会炸一地。更稳妥的策略是**不追大版本**：看上模板的某个新功能，单独让 AI 评估、单独搬那一小块。
 
 ### 12.4 定期巡检（也交给 AI）
 
