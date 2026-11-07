@@ -7,7 +7,7 @@ tags:
   - AI
   - 博客搭建
   - 教程
-category: 折腾记录
+category: 设计文档
 draft: false
 ---
 
