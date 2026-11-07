@@ -358,14 +358,33 @@ Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节
 
 ### 12.1 写文章（最常用的循环）
 
+写文章不要在 AI 对话框里逐句口述——长文在聊天框里改，越改越乱。更顺手的做法是：**先让 AI 建一个文章模板，之后你自己在 Obsidian 里写，AI 只管校验和发布。**
+
+1. 让 AI 建模板（一次性）：
+
 ```
-① 对 AI 说：新建一篇文章，文件名 XX，标题「XX」，先按这个大纲写草稿存为 draft，不要推送
-② 本地 http://localhost:4321 预览，自己通读一遍，把要改的地方列出来发回给它改
-③ 满意后对 AI 说：把草稿状态改成发布，提交并推送
-④ Vercel 检测到推送，自动构建，约 3 分钟后线上生效
+请按这个博客现有的文章格式，在仓库根目录建一个「文章模板.md」：包含完整的 frontmatter（标题、日期、描述、标签、分类、封面、草稿标记，字段和现有文章保持一致）和正文骨架。
 ```
 
-写一篇文章的固定成本：几句话 + 几分钟等待，全程无命令。
+2. 用 Obsidian 把博客文件夹打开为仓库，在里面写文章：复制一份模板改名，正文慢慢写，图片直接拖进去。
+3. 写完对 AI 说一句就行：
+
+```
+我新写了一篇（文件在 src/content/posts/ 下），检查一下 frontmatter 和图片引用，没问题就提交推送。
+```
+
+之后 Vercel 检测到推送自动构建，约 3 分钟线上生效。Obsidian 再装个 Git 插件、开自动提交的话，连第 3 句都能省——我自己的站就是这么干的，写完自动上线。
+
+**和 AI 配合的流程，就固定成这四步：**
+
+1. **你只管写**：在 Obsidian 里写标题、正文、插图；分类和标签拿不准就先空着，不用纠结
+2. **AI 收尾**：喊它来补齐 frontmatter、按站点既有的分类标签归类（不许它自造词）、检查图片引用和公式有没有渲染坏
+3. **AI 发布并回报**：它提交推送，等构建完把线上链接发回给你
+4. **你验收**：点开看一遍；要改，小改自己在 Obsidian 里改完再喊它推，结构性的大改把意见列出来给它改
+
+分工就一条：内容归人，格式、校验、发布归 AI。各干各擅长的，谁也别抢谁的活。
+
+> 没用过 Obsidian 的先看这两处：[下载 Obsidian](https://obsidian.md/zh/download)（全平台免费）；上手和把文件夹连接成仓库，跟着 B 站这支视频走一遍就行：[Obsidian 入门保姆级教程：20 分钟轻松上手](https://www.bilibili.com/zh-Hans/video/BV1Xi4y1h76C/)；想查某个具体功能，再翻 [Obsidian 官方中文帮助](https://obsidian.md/zh/help/%E7%94%B1%E6%AD%A4%E5%BC%80%E5%A7%8B)。另外，专门针对「用 Obsidian 写博客」的配置方法（仓库根目录选哪一级、图片链接怎么设、粘贴图片自动改名），推荐看二叉树树的这篇：[现代！易上手！高效！且社区支持的超高校级的 MarkDown 编辑器！](https://2x.nz/posts/obsidian/)，文末参考里也附上了。
 
 ### 12.2 改配置、加功能
 
@@ -411,7 +430,7 @@ Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节
 - **数据完全自持**：仓库在你自己账号下，随时可以换部署平台、换 AI 工具、甚至换回自己动手，博客不锁死在任何服务商
 - **托管靠流程，不靠运气**：权限给最小、规矩写成文件、批次切小、验收归人——这四条比模型本身更决定成败
 
-接下来要做的只有一件事：把本文里所有的「XX」换成你的名字和域名，然后对 AI 说出第一句需求。
+接下来要做的只有一件事：把本文里所有的占位符换成你的名字和域名，然后对 AI 说出第一句需求。
 
 ## 参考
 
@@ -423,3 +442,4 @@ Vercel 是任播网络，官方 CNAME（`cname.vercel-dns.com`）解析到的节
 - [Vercel 文档](https://vercel.com/docs) —— 部署与自定义域名设置
 - [enhanced-FaaS-in-China](https://github.com/xingpingcn/enhanced-FaaS-in-China) —— 第六步优选 IP 的出处，社区维护的 Vercel 优选域名
 - Vercel 官方指南，[Accessing Vercel-hosted sites from mainland China](https://vercel.com/kb/guide/accessing-vercel-hosted-sites-from-mainland-china) —— 官方对国内访问的说明：自定义域名是第一步
+- 二叉树树 AcoFork，[《现代！易上手！高效！且社区支持的超高校级的MarkDown编辑器！》](https://2x.nz/posts/obsidian/) —— 第十二步 Obsidian 写博客的配置方法：仓库根目录、图片链接与粘贴改名插件
