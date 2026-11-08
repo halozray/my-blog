@@ -44,6 +44,7 @@ import {
 	mergeGuestbookMessages,
 	normalizeGuestbookComment,
 } from "@/utils/guestbook-chat";
+import { swapDefaultAvatars } from "@/utils/default-avatar";
 import GuestbookChatComposer from "./GuestbookChatComposer.svelte";
 import GuestbookChatMessage from "./GuestbookChatMessage.svelte";
 
@@ -61,6 +62,7 @@ const DRAFT_STORAGE_KEY = "guestbook-chat-draft";
 const serverURL = commentConfig.waline?.serverURL ?? "";
 const lang = commentConfig.waline?.lang ?? "zh-CN";
 const loginMode = commentConfig.waline?.login ?? "enable";
+const defaultAvatar = commentConfig.waline?.defaultAvatar ?? "";
 const announcements = guestbookConfig.announcements;
 
 let messages = $state<GuestbookMessage[]>([]);
@@ -420,7 +422,9 @@ async function fetchAllMessages(signal?: AbortSignal): Promise<{
 		await collect(page, SYNC_PAGE_SIZE);
 	}
 
-	return { items: [...collected.values()], incomplete };
+	const items = [...collected.values()];
+	await swapDefaultAvatars(items, defaultAvatar);
+	return { items, incomplete };
 }
 
 let autoNoticeShown = false;
@@ -797,9 +801,9 @@ async function sendMessage(
 		}
 
 		messages = messages.filter((message) => message.id !== tempId);
-		messages = mergeGuestbookMessages(messages, [
-			normalizeGuestbookComment(response.data),
-		]);
+		const posted = normalizeGuestbookComment(response.data);
+		await swapDefaultAvatars([posted], defaultAvatar);
+		messages = mergeGuestbookMessages(messages, [posted]);
 		initialError = "";
 		syncError = "";
 		lastSyncedAt = Date.now();
@@ -878,6 +882,7 @@ async function saveEditedMessage(message: GuestbookMessage) {
 			},
 		});
 		const normalized = normalizeGuestbookComment(response.data);
+		await swapDefaultAvatars([normalized], defaultAvatar);
 		messages = messages.map((candidate) =>
 			candidate.id === message.id
 				? { ...normalized, userId: normalized.userId ?? message.userId }

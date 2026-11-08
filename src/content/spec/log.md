@@ -14,6 +14,17 @@
 
   最新记录写在最上面。
 -->
+## 评论区游客默认头像
+
+- 日期：2026-11-08
+- 类型：feat
+- 页面：post / guestbook
+- 简述：没在头像服务设过头像的游客，评论区里换上本站专属形象「小屋少女」，有自己头像的人不受影响
+
+1. `commentConfig.waline` 新增 `defaultAvatar` 配置（类型同步补在 `src/types/config.ts`），指向灵感屋专属形象 `/assets/images/default-avatars/idea-spirit.webp`；留空即不替换、沿用 Waline 自带默认图。
+2. 评论组件与留言墙在前端分辨：头像走 libravatar 直链的，用 `?d=404` 探针确认对方没注册过头像才换成本站默认图，探针结果按邮箱哈希缓存 7 天；QQ 头像、自设头像等其他来源一律不碰。与主站 lanerc.me 同口径实现。
+3. 候选图共 13 张（灵感屋专属三张：小屋少女、灯泡少女、屋灵；另有天海兰太郎 + Q 版 ds娘九张）放在 `public/assets/images/default-avatars/`，均为 256px 小图；换图改配置一行即可。
+
 ## 播放器歌单加载提速
 
 - 日期：2026-11-05
