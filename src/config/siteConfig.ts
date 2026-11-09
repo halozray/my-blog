@@ -211,9 +211,9 @@ export const siteConfig: SiteConfig = {
 		umamiAnalytics: {
 			websiteId: "9ab5dd2c-4b34-488e-a563-cba292fba104",
 			shareId: "2uCjyieGcgw1bNqu",
-			scriptUrl: "https://umami.lanerc.me/script.js",
+			scriptUrl: "https://tide.lanerc.me/script.js",
 			// 使用 Umami 的 PV 展示文章详情、列表与网格浏览量；启用时优先于评论系统统计
-			// 数据源为站长的公开分享链接 https://umami.lanerc.me/share/2uCjyieGcgw1bNqu
+			// 数据源为站长的公开分享链接 https://tide.lanerc.me/share/2uCjyieGcgw1bNqu
 			pageviews: {
 				enabled: true,
 			},
