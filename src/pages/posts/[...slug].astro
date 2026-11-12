@@ -27,6 +27,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import CoverImage from "@/components/common/CoverImage.astro";
 import PaperDeckleDefs from "@/components/common/PaperDeckleDefs.astro";
+import PostDownloads from "@/components/misc/PostDownloads.astro";
 import PostFooterActions from "@/components/misc/PostFooterActions.astro";
 import PostSectionDivider from "@/components/misc/PostSectionDivider.astro";
 import RelatedPosts from "@/components/misc/RelatedPosts.astro";
@@ -550,6 +551,10 @@ const serializedJsonLd = serializeJsonLd(jsonLd);
             <Content />
           </Markdown>
 
+          {entry.data.downloads.length > 0 && (
+            <PostDownloads downloads={entry.data.downloads} class="onload-animation" />
+          )}
+
           <PostFooterActions
             title={entry.data.title}
             published={entry.data.published}
@@ -573,6 +578,10 @@ const serializedJsonLd = serializeJsonLd(jsonLd);
           <Markdown class="mb-6! markdown-content onload-animation">
             <Content />
           </Markdown>
+
+          {entry.data.downloads.length > 0 && (
+            <PostDownloads downloads={entry.data.downloads} class="onload-animation" />
+          )}
 
           <PostFooterActions
             title={entry.data.title}

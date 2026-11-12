@@ -24,6 +24,17 @@ const postsCollection = defineCollection({
 		passwordHint: z.string().optional().default(""),
 		// 仅从公开机器知识入口排除，文章页面仍然保留。
 		wikiExclude: z.boolean().optional().default(false),
+		downloads: z
+			.array(
+				z.object({
+					name: z.string(),
+					url: z.string(),
+					size: z.string().optional().default(""),
+					desc: z.string().optional().default(""),
+				}),
+			)
+			.optional()
+			.default([]),
 
 		/* For internal use */
 		prevTitle: z.string().default(""),
