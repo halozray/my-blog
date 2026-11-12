@@ -1,0 +1,348 @@
+---
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "@/config";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/picbed.css";
+
+// 检查页面是否启用
+if (!siteConfig.pages.picbed) {
+	return Astro.redirect("/404/");
+}
+
+const title = "图床";
+const description = "博客图片都存在这里，点图就能复制外链。";
+---
+
+<MainGridLayout title={title} description={description}>
+	<div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-4 py-6 md:px-9 relative w-full">
+			<div class="flex items-start gap-3">
+				<div>
+					<h2 class="flex items-center gap-2 text-lg font-bold">
+						<Icon name="material-symbols:imagesmode-rounded" />
+						{title}
+					</h2>
+					<p class="text-sm opacity-70">{description}</p>
+				</div>
+				<button type="button" class="picbed-btn picbed-lock" data-pb-lock hidden>锁定</button>
+			</div>
+
+			<div class="picbed-gate" data-pb-gate>
+				<p>这个图床不对外开放，输入口令后浏览。</p>
+				<div class="gate-row">
+					<input type="password" data-pb-pw placeholder="访问口令" autocomplete="current-password" />
+					<button type="button" class="picbed-btn" data-pb-unlock>解锁</button>
+				</div>
+				<p class="picbed-error" data-pb-error></p>
+				<p class="picbed-footnote">口令的哈希存在 Vercel 环境变量里；还没设口令时图床处于关闭状态，谁都列不出来。图片本身是公开直链，这里挡的是翻图库和往里传图。</p>
+			</div>
+
+			<div data-pb-browser hidden>
+				<nav class="picbed-crumbs" data-pb-crumbs aria-label="目录"></nav>
+				<div class="picbed-upload" data-pb-upload>
+					<input type="file" data-pb-file multiple hidden>
+					<button type="button" class="picbed-btn" data-pb-pick>上传</button>
+					<span class="picbed-up-target" data-pb-up-target></span>
+					<span class="picbed-up-status" data-pb-up-status></span>
+					<p class="picbed-up-hint">点按钮选文件，或把文件直接拖到这个框里；会传到你正在看的这个目录。单个文件上限 4MB（Vercel 接口限制），多个文件逐个传。</p>
+					<div class="picbed-up-results" data-pb-up-results></div>
+				</div>
+				<div class="picbed-folders" data-pb-folders></div>
+				<div class="picbed-grid" data-pb-grid></div>
+				<div class="picbed-files" data-pb-files></div>
+				<p class="picbed-empty" data-pb-empty hidden>这个目录是空的。</p>
+				<button type="button" class="picbed-btn picbed-more" data-pb-more hidden>加载更多</button>
+			</div>
+		</div>
+	</div>
+	<script is:inline>
+		// 切页机制同 calendar.astro 范式：脚本在 MainGridLayout 内部（#swup-container 里），
+		// 启动函数挂全局 + 戳记防重复绑，看门狗在 swup 事件时兜底补跑。
+		function __initPicbed() {
+			var PW_KEY = "picbed-pw";
+			var gate = document.querySelector("[data-pb-gate]");
+			var browser = document.querySelector("[data-pb-browser]");
+			if (!gate || !browser) return;
+			if (gate.dataset.pbBound === "1") return;
+			gate.dataset.pbBound = "1";
+			var pwInput = gate.querySelector("[data-pb-pw]");
+			var errEl = gate.querySelector("[data-pb-error]");
+			var lockBtn = document.querySelector("[data-pb-lock]");
+			var crumbs = browser.querySelector("[data-pb-crumbs]");
+			var foldersEl = browser.querySelector("[data-pb-folders]");
+			var grid = browser.querySelector("[data-pb-grid]");
+			var filesEl = browser.querySelector("[data-pb-files]");
+			var emptyEl = browser.querySelector("[data-pb-empty]");
+			var moreBtn = browser.querySelector("[data-pb-more]");
+			var uploadBox = browser.querySelector("[data-pb-upload]");
+			var fileInput = browser.querySelector("[data-pb-file]");
+			var pickBtn = browser.querySelector("[data-pb-pick]");
+			var upTarget = browser.querySelector("[data-pb-up-target]");
+			var upStatus = browser.querySelector("[data-pb-up-status]");
+			var upResults = browser.querySelector("[data-pb-up-results]");
+
+			var password = sessionStorage.getItem(PW_KEY) || "";
+			var prefix = "";
+			var cursor = null;
+			var IMG_EXT = /\.(png|jpe?g|gif|webp|avif|svg|bmp|ico)$/i;
+
+			function esc(s) {
+				return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+					return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+				});
+			}
+			function fmtSize(n) {
+				if (n < 1024) return n + " B";
+				if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB";
+				return (n / 1024 / 1024).toFixed(2) + " MB";
+			}
+			function copy(text, btn) {
+				function done() {
+					if (!btn) return;
+					var old = btn.textContent;
+					btn.textContent = "已复制";
+					setTimeout(function () { btn.textContent = old; }, 1200);
+				}
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(text).then(done).catch(function () { fallback(); });
+				} else fallback();
+				function fallback() {
+					var ta = document.createElement("textarea");
+					ta.value = text;
+					document.body.appendChild(ta);
+					ta.select();
+					try { document.execCommand("copy"); } catch (e) {}
+					ta.remove();
+					done();
+				}
+			}
+
+			function renderCrumbs() {
+				var parts = prefix.split("/").filter(Boolean);
+				var html = '<button type="button" data-crumb="">全部</button>';
+				var acc = "";
+				parts.forEach(function (p) {
+					acc += p + "/";
+					html += '<span class="sep">/</span><button type="button" data-crumb="' + esc(acc) + '">' + esc(p) + "</button>";
+				});
+				crumbs.innerHTML = html;
+				upTarget.textContent = "传到：" + (prefix ? "/" + prefix.replace(/\/$/, "") : "根目录");
+			}
+
+			function render(data, append) {
+				if (!append) {
+					foldersEl.innerHTML = "";
+					grid.innerHTML = "";
+					filesEl.innerHTML = "";
+				}
+				(data.folders || []).forEach(function (f) {
+					var b = document.createElement("button");
+					b.type = "button";
+					b.className = "picbed-folder";
+					b.textContent = f.name;
+					b.addEventListener("click", function () { prefix = f.prefix; cursor = null; load(false); });
+					foldersEl.appendChild(b);
+				});
+				(data.objects || []).forEach(function (o) {
+					if (IMG_EXT.test(o.name)) {
+						var card = document.createElement("div");
+						card.className = "picbed-card";
+						card.innerHTML = '<img class="thumb" loading="lazy" src="' + esc(o.url) + '" alt="' + esc(o.name) + '">'
+							+ '<div class="meta"><span class="name">' + esc(o.name) + '</span>'
+							+ '<span class="size">' + fmtSize(o.size) + '</span>'
+							+ '<div class="picbed-copyrow">'
+							+ '<button type="button" data-fmt="md">Markdown</button>'
+							+ '<button type="button" data-fmt="url">链接</button>'
+							+ '<button type="button" data-fmt="html">HTML</button>'
+							+ "</div></div>";
+						var img = card.querySelector("img");
+						img.addEventListener("click", function () { copy("![" + o.name + "](" + o.url + ")", img); });
+						card.querySelectorAll("[data-fmt]").forEach(function (btn) {
+							btn.addEventListener("click", function () {
+								var fmt = btn.getAttribute("data-fmt");
+								var text = fmt === "md" ? "![" + o.name + "](" + o.url + ")"
+									: fmt === "html" ? '<img src="' + o.url + '" alt="' + o.name + '">'
+									: o.url;
+								copy(text, btn);
+							});
+						});
+						grid.appendChild(card);
+					} else {
+						var row = document.createElement("div");
+						row.className = "picbed-file";
+						row.innerHTML = '<span class="name">' + esc(o.name) + '</span><span class="size">' + fmtSize(o.size) + "</span>";
+						var b = document.createElement("button");
+						b.type = "button";
+						b.className = "picbed-btn";
+						b.textContent = "复制链接";
+						b.addEventListener("click", function () { copy(o.url, b); });
+						row.appendChild(b);
+						filesEl.appendChild(row);
+					}
+				});
+				var hasAny = (data.folders || []).length + (data.objects || []).length > 0
+					|| grid.children.length + filesEl.children.length + foldersEl.children.length > 0;
+				emptyEl.hidden = hasAny;
+				cursor = data.truncated ? data.cursor : null;
+				moreBtn.hidden = !data.truncated;
+				renderCrumbs();
+			}
+
+			function load(append) {
+				errEl.textContent = "";
+				return fetch("/api/picbed-list", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ password: password, prefix: prefix, cursor: append ? cursor : null }),
+				}).then(function (r) {
+					return r.json().then(function (data) { return { ok: r.ok, status: r.status, data: data }; });
+				}).then(function (res) {
+					if (!res.ok) {
+						if (res.status === 401) {
+							sessionStorage.removeItem(PW_KEY);
+							password = "";
+							showGate("口令不对，重新输一次。");
+						} else {
+							showGate(res.data.error || "图床暂时不可用。");
+						}
+						throw new Error("gate");
+					}
+					gate.hidden = true;
+					browser.hidden = false;
+					lockBtn.hidden = false;
+					render(res.data, append);
+				});
+			}
+
+			function showGate(msg) {
+				gate.hidden = false;
+				browser.hidden = true;
+				lockBtn.hidden = true;
+				errEl.textContent = msg || "";
+			}
+
+			gate.querySelector("[data-pb-unlock]").addEventListener("click", function () {
+				password = pwInput.value.trim();
+				if (!password) { errEl.textContent = "先填口令。"; return; }
+				sessionStorage.setItem(PW_KEY, password);
+				prefix = "";
+				cursor = null;
+				load(false).catch(function () {});
+			});
+			pwInput.addEventListener("keydown", function (e) {
+				if (e.key === "Enter") gate.querySelector("[data-pb-unlock]").click();
+			});
+			lockBtn.addEventListener("click", function () {
+				sessionStorage.removeItem(PW_KEY);
+				password = "";
+				pwInput.value = "";
+				showGate("");
+			});
+			crumbs.addEventListener("click", function (e) {
+				var b = e.target.closest("[data-crumb]");
+				if (!b) return;
+				prefix = b.getAttribute("data-crumb") || "";
+				cursor = null;
+				load(false).catch(function () {});
+			});
+			moreBtn.addEventListener("click", function () { load(true).catch(function () {}); });
+
+			function addUpResult(u) {
+				var row = document.createElement("div");
+				row.className = "picbed-up-result";
+				row.innerHTML = '<span class="url">' + esc(u) + "</span>";
+				var b = document.createElement("button");
+				b.type = "button";
+				b.className = "picbed-btn";
+				b.textContent = "复制";
+				b.addEventListener("click", function () { copy(u, b); });
+				row.appendChild(b);
+				upResults.appendChild(row);
+			}
+
+			// 逐个文件发一个请求：Vercel 函数单请求体上限约 4.5MB，多文件一锅端会撞上限
+			function uploadFiles(fileList) {
+				var files = Array.prototype.slice.call(fileList || []);
+				if (!files.length) return;
+				upStatus.classList.remove("error");
+				var done = 0;
+				var failed = [];
+				function step(i) {
+					if (i >= files.length) {
+						if (failed.length) {
+							upStatus.classList.add("error");
+							upStatus.textContent = "传完 " + done + " 个，失败：" + failed.join("、");
+						} else {
+							upStatus.textContent = "已上传 " + done + " 个";
+						}
+						cursor = null;
+						load(false).catch(function () {});
+						return;
+					}
+					var f = files[i];
+					upStatus.textContent = "上传中…（" + (i + 1) + "/" + files.length + " " + f.name + "）";
+					var fd = new FormData();
+					fd.append("password", password);
+					fd.append("dir", prefix.replace(/\/$/, ""));
+					fd.append("files", f, f.name);
+					fetch("/api/picbed-upload", { method: "POST", body: fd })
+						.then(function (r) {
+							return r.json().then(function (data) { return { ok: r.ok, status: r.status, data: data }; });
+						})
+						.then(function (res) {
+							if (!res.ok) {
+								if (res.status === 401) {
+									sessionStorage.removeItem(PW_KEY);
+									password = "";
+									showGate("口令不对，重新输一次。");
+									throw new Error("gate");
+								}
+								throw new Error(res.data.error || "上传失败");
+							}
+							done++;
+							(res.data.urls || []).forEach(addUpResult);
+							step(i + 1);
+						})
+						.catch(function (e) {
+							if (e && e.message === "gate") return;
+							failed.push(f.name);
+							step(i + 1);
+						});
+				}
+				step(0);
+			}
+			pickBtn.addEventListener("click", function () { fileInput.click(); });
+			fileInput.addEventListener("change", function () {
+				uploadFiles(fileInput.files);
+				fileInput.value = "";
+			});
+			uploadBox.addEventListener("dragover", function (e) {
+				e.preventDefault();
+				uploadBox.classList.add("dragover");
+			});
+			uploadBox.addEventListener("dragleave", function () { uploadBox.classList.remove("dragover"); });
+			uploadBox.addEventListener("drop", function (e) {
+				e.preventDefault();
+				uploadBox.classList.remove("dragover");
+				if (e.dataTransfer) uploadFiles(e.dataTransfer.files);
+			});
+
+			if (password) load(false).catch(function () {});
+		}
+		__initPicbed();
+		(function () {
+			function pbRetry() {
+				setTimeout(function () {
+					if (document.querySelector("[data-pb-gate]")) __initPicbed();
+				}, 500);
+			}
+			if (!window.__pbWatchdog) {
+				window.__pbWatchdog = true;
+				document.addEventListener("swup:contentReplaced", pbRetry);
+				document.addEventListener("swup:content:replace", pbRetry);
+				document.addEventListener("swup:page:view", pbRetry);
+			}
+			pbRetry();
+		})();
+	</script>
+</MainGridLayout>

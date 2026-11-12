@@ -97,6 +97,13 @@ const buildNavBarConfig = (): NavBarConfig => {
 	if (siteConfig.pages.gallery) {
 		myChildren.push(LinkPreset.Gallery);
 	}
+	if (siteConfig.pages.picbed) {
+		myChildren.push({
+			name: "图床",
+			url: "/picbed/",
+			icon: "material-symbols:imagesmode-rounded",
+		});
+	}
 	// 日历页常驻（与相册/关于同组），文案直接写中文，不新增 i18n key
 	myChildren.push({
 		name: "日历",

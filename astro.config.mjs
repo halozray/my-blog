@@ -196,6 +196,10 @@ export default defineConfig({
 				if (pathname === "/search/") {
 					return false;
 				}
+				// 图床门面是口令工具页，不应被索引
+				if (pathname === "/picbed/") {
+					return false;
+				}
 				// 文档列表页及其分页（/list/、/list/2/ …）
 				if (pathname.startsWith("/list/") && !siteConfig.pages.postList) {
 					return false;
