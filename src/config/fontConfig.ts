@@ -25,7 +25,7 @@ export const fontConfig = {
 		// Google Fonts - Inter
 		inter: {
 			id: "inter",
-			name: "Inter",
+			name: "英文无衬线（Inter）",
 			src: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
 			family: "Inter",
 			display: "swap" as const,
@@ -34,7 +34,7 @@ export const fontConfig = {
 		// 小米字体 - MiSans Normal
 		"misans-normal": {
 			id: "misans-normal",
-			name: "MiSans Normal",
+			name: "小米 MiSans 常规",
 			src: "https://unpkg.com/misans@4.1.0/lib/Normal/MiSans-Normal.min.css",
 			family: "MiSans",
 			weight: 400,
@@ -44,7 +44,7 @@ export const fontConfig = {
 		// 小米字体 - MiSans Regular
 		"misans-regular": {
 			id: "misans-regular",
-			name: "MiSans Regular",
+			name: "小米 MiSans 标准",
 			src: "https://unpkg.com/misans@4.1.0/lib/Normal/MiSans-Regular.min.css",
 			family: "MiSans",
 			weight: 500,
@@ -54,7 +54,7 @@ export const fontConfig = {
 		// 小米字体 - MiSans Semibold
 		"misans-semibold": {
 			id: "misans-semibold",
-			name: "MiSans Semibold",
+			name: "小米 MiSans 半粗",
 			src: "https://unpkg.com/misans@4.1.0/lib/Normal/MiSans-Semibold.min.css",
 			family: "MiSans",
 			weight: 600,
@@ -65,7 +65,7 @@ export const fontConfig = {
 		// Zen Maru Gothic（日系圆体）
 		"zen-maru-gothic": {
 			id: "zen-maru-gothic",
-			name: "Zen Maru Gothic",
+			name: "日系圆体（Zen Maru）",
 			src: "https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap",
 			family: "Zen Maru Gothic",
 			display: "swap" as const,
@@ -74,7 +74,7 @@ export const fontConfig = {
 		// Fredoka（圆润西文）
 		fredoka: {
 			id: "fredoka",
-			name: "Fredoka",
+			name: "圆润英文字体（Fredoka）",
 			src: "https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap",
 			family: "Fredoka",
 			display: "swap" as const,
@@ -83,7 +83,7 @@ export const fontConfig = {
 		// JetBrains Mono（代码等宽）
 		"jetbrains-mono": {
 			id: "jetbrains-mono",
-			name: "JetBrains Mono",
+			name: "代码等宽字体（JetBrains Mono）",
 			src: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap",
 			family: "JetBrains Mono",
 			display: "swap" as const,
@@ -92,7 +92,7 @@ export const fontConfig = {
 		// 思源宋体
 		"noto-serif-sc": {
 			id: "noto-serif-sc",
-			name: "Noto Serif SC",
+			name: "思源宋体",
 			src: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap",
 			family: "Noto Serif SC",
 			display: "swap" as const,
@@ -101,7 +101,7 @@ export const fontConfig = {
 		// M PLUS Rounded 1c（日本圆体）
 		"m-plus-rounded-1c": {
 			id: "m-plus-rounded-1c",
-			name: "M PLUS Rounded 1c",
+			name: "日本圆体（M PLUS Rounded）",
 			src: "https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap",
 			family: "M PLUS Rounded 1c",
 			display: "swap" as const,
@@ -110,7 +110,7 @@ export const fontConfig = {
 		// Great Vibes（手写花体，本地文件）
 		"great-vibes": {
 			id: "great-vibes",
-			name: "Great Vibes",
+			name: "手写花体（Great Vibes）",
 			src: "/assets/fonts/GreatVibes-Regular-2.otf",
 			family: "Great Vibes",
 			format: "opentype" as const,
@@ -120,7 +120,7 @@ export const fontConfig = {
 		// 霞鹜文楷 GB Lite（本地文件，已按常用字集子集化为 woff2）
 		"lxgw-wenkai": {
 			id: "lxgw-wenkai",
-			name: "LXGW WenKai GB Lite",
+			name: "霞鹜文楷",
 			src: "/assets/fonts/LXGWWenKaiGBLite-Regular.woff2",
 			family: "LXGW WenKai GB Lite",
 			format: "woff2" as const,
@@ -130,7 +130,7 @@ export const fontConfig = {
 		// 朱雀仿宋（本地文件，已子集化）
 		"zhuque-fangsong": {
 			id: "zhuque-fangsong",
-			name: "Zhuque Fangsong",
+			name: "朱雀仿宋",
 			src: "/assets/fonts/ZhuqueFangsong-Regular.woff2",
 			family: "Zhuque Fangsong",
 			format: "woff2" as const,
@@ -140,7 +140,7 @@ export const fontConfig = {
 		// 中文圆体 Luoliti（本地文件，已子集化）
 		luoliti: {
 			id: "luoliti",
-			name: "Luoliti",
+			name: "萝莉体",
 			src: "/assets/fonts/loli.woff2",
 			family: "Luoliti",
 			format: "woff2" as const,
@@ -150,7 +150,7 @@ export const fontConfig = {
 		// 汉仪小麦体（本地文件，已子集化）
 		xiaomaiti: {
 			id: "xiaomaiti",
-			name: "HYXiaoMaiTiJ",
+			name: "汉仪小麦体",
 			src: "/assets/fonts/HYXiaoMaiTiJ.woff2",
 			family: "HYXiaoMaiTiJ",
 			format: "woff2" as const,
