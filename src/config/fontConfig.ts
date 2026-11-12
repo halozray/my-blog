@@ -60,6 +60,102 @@ export const fontConfig = {
 			weight: 600,
 			display: "swap" as const,
 		},
+
+		// ── 主站同款字体库（2026-11-12 搬入，与主站 lanerc.me 同一批字体）──
+		// Zen Maru Gothic（日系圆体）
+		"zen-maru-gothic": {
+			id: "zen-maru-gothic",
+			name: "Zen Maru Gothic",
+			src: "https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap",
+			family: "Zen Maru Gothic",
+			display: "swap" as const,
+		},
+
+		// Fredoka（圆润西文）
+		fredoka: {
+			id: "fredoka",
+			name: "Fredoka",
+			src: "https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap",
+			family: "Fredoka",
+			display: "swap" as const,
+		},
+
+		// JetBrains Mono（代码等宽）
+		"jetbrains-mono": {
+			id: "jetbrains-mono",
+			name: "JetBrains Mono",
+			src: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap",
+			family: "JetBrains Mono",
+			display: "swap" as const,
+		},
+
+		// 思源宋体
+		"noto-serif-sc": {
+			id: "noto-serif-sc",
+			name: "Noto Serif SC",
+			src: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap",
+			family: "Noto Serif SC",
+			display: "swap" as const,
+		},
+
+		// M PLUS Rounded 1c（日本圆体）
+		"m-plus-rounded-1c": {
+			id: "m-plus-rounded-1c",
+			name: "M PLUS Rounded 1c",
+			src: "https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap",
+			family: "M PLUS Rounded 1c",
+			display: "swap" as const,
+		},
+
+		// Great Vibes（手写花体，本地文件）
+		"great-vibes": {
+			id: "great-vibes",
+			name: "Great Vibes",
+			src: "/assets/fonts/GreatVibes-Regular-2.otf",
+			family: "Great Vibes",
+			format: "opentype" as const,
+			display: "swap" as const,
+		},
+
+		// 霞鹜文楷 GB Lite（本地文件，已按常用字集子集化为 woff2）
+		"lxgw-wenkai": {
+			id: "lxgw-wenkai",
+			name: "LXGW WenKai GB Lite",
+			src: "/assets/fonts/LXGWWenKaiGBLite-Regular.woff2",
+			family: "LXGW WenKai GB Lite",
+			format: "woff2" as const,
+			display: "swap" as const,
+		},
+
+		// 朱雀仿宋（本地文件，已子集化）
+		"zhuque-fangsong": {
+			id: "zhuque-fangsong",
+			name: "Zhuque Fangsong",
+			src: "/assets/fonts/ZhuqueFangsong-Regular.woff2",
+			family: "Zhuque Fangsong",
+			format: "woff2" as const,
+			display: "swap" as const,
+		},
+
+		// 中文圆体 Luoliti（本地文件，已子集化）
+		luoliti: {
+			id: "luoliti",
+			name: "Luoliti",
+			src: "/assets/fonts/loli.woff2",
+			family: "Luoliti",
+			format: "woff2" as const,
+			display: "swap" as const,
+		},
+
+		// 汉仪小麦体（本地文件，已子集化）
+		xiaomaiti: {
+			id: "xiaomaiti",
+			name: "HYXiaoMaiTiJ",
+			src: "/assets/fonts/HYXiaoMaiTiJ.woff2",
+			family: "HYXiaoMaiTiJ",
+			format: "woff2" as const,
+			display: "swap" as const,
+		},
 	},
 
 	// 全局字体回退
