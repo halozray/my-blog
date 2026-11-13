@@ -20,7 +20,8 @@ const extOf = (name: string) => {
 	return m ? m[1].toUpperCase() : "FILE";
 };
 
-const metaOf = (d: DownloadItem) => [d.size, d.desc].filter(Boolean).join(" · ");
+const metaOf = (d: DownloadItem) =>
+	[d.size, d.desc].filter(Boolean).join(" · ");
 ---
 
 <div

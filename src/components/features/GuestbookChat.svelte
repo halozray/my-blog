@@ -30,6 +30,7 @@ import type {
 	GuestbookChatMessage as GuestbookMessage,
 	GuestbookProfile,
 } from "@/types/guestbook-chat";
+import { swapDefaultAvatars } from "@/utils/default-avatar";
 import {
 	appendGuestbookImage,
 	buildGuestbookEditedMessageBody,
@@ -44,7 +45,6 @@ import {
 	mergeGuestbookMessages,
 	normalizeGuestbookComment,
 } from "@/utils/guestbook-chat";
-import { swapDefaultAvatars } from "@/utils/default-avatar";
 import GuestbookChatComposer from "./GuestbookChatComposer.svelte";
 import GuestbookChatMessage from "./GuestbookChatMessage.svelte";
 

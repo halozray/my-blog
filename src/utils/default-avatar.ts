@@ -14,9 +14,10 @@ interface CacheEntry {
 
 function loadCache(): Record<string, CacheEntry> {
 	try {
-		return JSON.parse(
-			localStorage.getItem(CACHE_KEY) || "{}",
-		) as Record<string, CacheEntry>;
+		return JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") as Record<
+			string,
+			CacheEntry
+		>;
 	} catch {
 		return {};
 	}
